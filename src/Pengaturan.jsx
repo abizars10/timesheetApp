@@ -1,29 +1,13 @@
-import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
+import Header from "./component/header";
+import Navbar from "./component/navbar";
 
 export default function DaftarKegiatan() {
   return (
-    <>
-      <nav className="navbar navbar-expand-lg shadow-sm ps-2">
-        <div className="container-fluid">
-          <p className="navbar-brand mb-0 fw-bold lh-1">
-            <span className="fs-6">Timesheet</span> <br /> Management
-          </p>
-        </div>
-      </nav>
+    <Box sx={{ backgroundColor: "#F7F8FB", height: "100vh" }}>
+      <Header />
+      <Navbar />
       <div className="container mt-3">
-        <h3>HH Timesheet</h3>
-        <ul className="nav nav-tabs mb-3">
-          <li className="nav-item">
-            <Link className="nav-link " to="/">
-              Daftar Kegiatan
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link active" to="/pengaturan">
-              Pengaturan
-            </Link>
-          </li>
-        </ul>
         <div className="d-flex justify-content-center align-items-center ">
           <div className="card p-4" style={{ width: "25rem" }}>
             <div className="card-body">
@@ -53,6 +37,6 @@ export default function DaftarKegiatan() {
           </div>
         </div>
       </div>
-    </>
+    </Box>
   );
 }
