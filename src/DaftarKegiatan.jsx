@@ -1,56 +1,94 @@
 import Header from "./component/header";
-import { Box } from "@mui/material";
+import { Autocomplete, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
+import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
 
 export default function DaftarKegiatan() {
+  const contoh = [{ label: "The Shawshank Redemption" }, { label: "The Godfather" }, { label: "The Godfather: Part II" }];
   return (
     <Box sx={{ backgroundColor: "#F7F8FB", height: "100vh" }}>
       <Header />
       <Navbar />
-      <div className="container mt-3">
-        <div className="card">
-          <div className="card-body">
-            <div className="mb-3 d-flex justify-content-between">
-              <span>
-                <strong>Nama Karyawan:</strong> Timothy Pradana
-              </span>
-              <span>
-                <strong>Rate:</strong> Rp12.000/jam
-              </span>
-            </div>
-            <button className="btn btn-primary mb-3">Tambah Kegiatan</button>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Judul Kegiatan</th>
-                  <th scope="col">Nama Proyek</th>
-                  <th scope="col">Tanggal Mulai</th>
-                  <th scope="col">Tanggal Berakhir</th>
-                  <th scope="col">Waktu Mulai</th>
-                  <th scope="col">Waktu Berakhir</th>
-                  <th scope="col">Durasi</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colSpan="8" className="text-center">
+      <Box m={3}>
+        <Paper>
+          <Box p={2} display="flex" sx={{ gap: 5, borderBottom: "2px solid #F7F8FB" }}>
+            <Box>
+              <Typography sx={{ fontSize: "14px" }}>Nama Karyawan</Typography>
+              <Typography>Timothy Pradana</Typography>
+            </Box>
+            <Box>
+              <Typography sx={{ fontSize: "14px" }}>Rate</Typography>
+              <Typography>Rp12.000/jam</Typography>
+            </Box>
+          </Box>
+          <Box p={2} display={"flex"} justifyContent={"space-between"} alignItems="center">
+            <Box display={"flex"} gap={3}>
+              <Typography variant="h6">Daftar Kegiatan</Typography>
+              <Button variant="outlined" size="small" startIcon={<AddCircleOutlineTwoToneIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
+                Tambah Kegiatan
+              </Button>
+            </Box>
+            <Box>
+              <Autocomplete
+                disablePortal
+                id="free-solo-demo"
+                freeSolo
+                options={contoh}
+                sx={{ width: 200 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    size="small"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <Box display="flex" alignItems="center" sx={{ mr: 1 }}>
+                          <SearchIcon sx={{ color: "gray", fontSize: "20px" }} />
+                          {params.InputProps.startAdornment}
+                        </Box>
+                      ),
+                    }}
+                    label="cari"
+                  />
+                )}
+              />
+            </Box>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Judul Kegiatan</TableCell>
+                  <TableCell>Nama Proyek</TableCell>
+                  <TableCell>Tanggal Mulai</TableCell>
+                  <TableCell>Tanggal Berakhir</TableCell>
+                  <TableCell>Waktu Mulai</TableCell>
+                  <TableCell>Waktu Berakhir</TableCell>
+                  <TableCell>Durasi</TableCell>
+                  <TableCell>Aksi</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
                     Belum ada kegiatan
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div className="mt-3">
-              <span>
-                <strong>Total Durasi:</strong> -
-              </span>
-              <span className="float-end">
-                <strong>Total Pendapatan:</strong> -
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Box p={2} display={"flex"} justifyContent={"space-between"} color={"#2775EC"}>
+              <Typography>Total Durasi</Typography>
+              <Typography>8 jam 50 Menit</Typography>
+            </Box>
+            <Box p={2} display={"flex"} justifyContent={"space-between"} marginTop={-3} color={"#2775EC"}>
+              <Typography fontWeight={"bold"}>Pendapatan</Typography>
+              <Typography fontWeight={"bold"}>Rp200.000</Typography>
+            </Box>
+          </TableContainer>
+        </Paper>
+      </Box>
     </Box>
   );
 }
