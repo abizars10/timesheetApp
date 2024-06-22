@@ -4,8 +4,12 @@ import Navbar from "./component/navbar";
 import { useState } from "react";
 import { addKaryawan } from "./service";
 
-export default function DaftarKegiatan() {
+export default function Pengaturan() {
   const [dataKaryawan, setDataKaryawan] = useState({ nama: "", rate: "" });
+  const [errors, setErrors] = useState({
+    nama: "",
+    rate: "",
+  });
   const onChangeKaryawan = (nama, value) => {
     if (nama === "rate") {
       const baru = !isNaN(value) ? value : "";
@@ -13,20 +17,58 @@ export default function DaftarKegiatan() {
         ...prev,
         [nama]: baru,
       }));
+      setErrors({
+        ...errors,
+        rate: "",
+      });
     } else {
-      setDataKaryawan((prev) => ({
-        ...prev,
-        [nama]: value,
-      }));
+      const regex = /^[a-zA-Z\s]+$/;
+      setDataKaryawan((prev) => {
+        if (regex.test(value)) {
+          setErrors({
+            ...errors,
+            nama: "",
+          });
+          return {
+            ...prev,
+            [nama]: value,
+          };
+        } else {
+          return {
+            ...prev,
+            [nama]: "",
+          };
+        }
+      });
     }
   };
 
   const handleSubmit = async () => {
-    try {
-      const fetch = await addKaryawan(dataKaryawan);
-      console.log(fetch);
-    } catch (err) {
-      console.log(err);
+    if (dataKaryawan.nama !== "" && dataKaryawan.rate !== "") {
+      try {
+        const fetch = await addKaryawan(dataKaryawan);
+        console.log(fetch);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      if (dataKaryawan.nama === "" && dataKaryawan.rate === "") {
+        setErrors({
+          ...errors,
+          nama: "Nama tidak boleh kosong!",
+          rate: "Rate tidak boleh kosong!",
+        });
+      } else if (dataKaryawan.nama === "") {
+        setErrors({
+          ...errors,
+          nama: "Nama tidak boleh kosong!",
+        });
+      } else if (dataKaryawan.rate === "") {
+        setErrors({
+          ...errors,
+          rate: "Rate tidak boleh kosong!",
+        });
+      }
     }
   };
   return (
@@ -34,10 +76,11 @@ export default function DaftarKegiatan() {
       <Header />
       <Navbar />
       <Box sx={{ height: "70%", display: "flex", alignItems: "center" }}>
-        <Card variant="outlined" sx={{ width: "25vw", height: "30vh", margin: "auto", padding: 5, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Card variant="outlined" sx={{ width: "25vw", height: "35vh", margin: "auto", padding: 5, display: "flex", flexDirection: "column", gap: 2 }}>
           <Box>
             <Typography sx={{ fontSize: "12px" }}>Nama Karyawan</Typography>
             <TextField sx={{ width: "100%" }} value={dataKaryawan.nama} placeholder="Nama Karyawan" id="outlined-size-small" size="small" onChange={(e) => onChangeKaryawan("nama", e.target.value)} />
+            <Typography sx={{ color: "red", fontSize: "10px" }}>{errors.nama}</Typography>
           </Box>
           <Box>
             <Typography sx={{ fontSize: "12px" }}>Rate</Typography>
@@ -53,7 +96,9 @@ export default function DaftarKegiatan() {
                 endAdornment: <InputAdornment position="end">/Jam</InputAdornment>,
               }}
             />
+            <Typography sx={{ color: "red", fontSize: "10px" }}>{errors.rate}</Typography>
           </Box>
+
           <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
             <Button sx={{ backgroundColor: "#F7F8FB", width: "48%", color: "#2775EC", fontSize: "10px" }} variant="text">
               Batalkan

@@ -6,7 +6,7 @@ export default function Navbar() {
   const location = useLocation();
   const pathName = location.pathname;
   return (
-    <Box sx={{ width: "100%", backgroundColor: "#fff", margin: "5px" }}>
+    <Box sx={{ backgroundColor: "#fff", margin: "5px" }}>
       <Typography sx={{ padding: "15px", fontWeight: "bold" }}>HH Timesheet</Typography>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, marginLeft: "20px", fontSize: "10px" }}>
         <Typography sx={{ cursor: "pointer", color: pathName === "/" ? "blue" : "#d3d3d3", borderBottom: pathName === "/" ? "2.5px solid blue" : "" }} onClick={() => navigate("/")}>
