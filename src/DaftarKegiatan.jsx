@@ -61,10 +61,10 @@ export default function DaftarKegiatan() {
     { field: "judul", headerName: "Judul Kegiatan", width: 200 },
     { field: "proyek", headerName: "Nama Proyek", width: 200 },
     { field: "tgl_mulai", headerName: "Tanggal Mulai", width: 150 },
-    { field: "tgl_berakhir", headerName: "Tanggal Berakhir", width: 150 },
+    { field: "tgl_berakhir", headerName: "Tanggal Berakhir", width: 125 },
     { field: "waktu_mulai", headerName: "Waktu Mulai", width: 150 },
-    { field: "waktu_berakhir", headerName: "Waktu Berakhir", width: 150 },
-    { field: "durasi", headerName: "Durasi", width: 100 },
+    { field: "waktu_berakhir", headerName: "Waktu Berakhir", width: 125 },
+    { field: "durasi", headerName: "Durasi", width: 150 },
     { field: "aksi", headerName: "AKSI", width: 100 },
   ];
 
@@ -101,18 +101,31 @@ export default function DaftarKegiatan() {
   };
 
   const handleOnchangeKegiatan = (nama, value) => {
+    console.log(`${nama}, ${value}`);
     if (nama === "tgl_mulai") {
       setStartDate(value);
-      setDataKegiatan({ ...dataAddKegiatan, tgl_mulai: dayjs(value).format("DD/MM/YYYY") });
-    } else if (nama === "tgl_akhr") {
+      setDataKegiatan({
+        ...dataAddKegiatan,
+        tgl_mulai: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+      });
+    } else if (nama === "tgl_berakhir") {
       setEndDate(value);
-      setDataKegiatan({ ...dataAddKegiatan, tgl_berakhir: dayjs(value).format("DD/MM/YYYY") });
+      setDataKegiatan({
+        ...dataAddKegiatan,
+        tgl_berakhir: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+      });
     } else if (nama === "waktu_mulai") {
       setSelectedTime(value);
-      setDataKegiatan({ ...dataAddKegiatan, waktu_mulai: dayjs(value).format("HH:mm") });
-    } else if (nama === "waktu_akr") {
+      setDataKegiatan({
+        ...dataAddKegiatan,
+        waktu_mulai: dayjs(value, "HH:mm").format("HH:mm"),
+      });
+    } else if (nama === "waktu_berakhir") {
       setSelectedTimeEnd(value);
-      setDataKegiatan({ ...dataAddKegiatan, waktu_berakhir: dayjs(value).format("HH:mm") });
+      setDataKegiatan({
+        ...dataAddKegiatan,
+        waktu_berakhir: dayjs(value, "HH:mm").format("HH:mm"),
+      });
     } else {
       setDataKegiatan((prev) => ({
         ...prev,
@@ -138,10 +151,15 @@ export default function DaftarKegiatan() {
   const handleAddKegiatan = async () => {
     const waktuMulai = dayjs(`${dataAddKegiatan.tgl_mulai} ${dataAddKegiatan.waktu_mulai}`, "DD-MMMM-YYYY HH:mm");
     const waktuSelesai = dayjs(`${dataAddKegiatan.tgl_berakhir} ${dataAddKegiatan.waktu_berakhir}`, "DD-MMMM-YYYY HH:mm");
+    if (!waktuMulai.isValid() || !waktuSelesai.isValid()) {
+      console.error("Invalid date format");
+      return;
+    }
     const durasiMenit = waktuSelesai.diff(waktuMulai, "minute");
     const durasiJam = Math.floor(durasiMenit / 60);
     const durasiSisaMenit = durasiMenit % 60;
     const durasi = `${durasiJam} jam ${durasiSisaMenit} menit`;
+    console.log(durasi);
     const params = {
       ...dataAddKegiatan,
       durasi: durasi,
@@ -154,7 +172,7 @@ export default function DaftarKegiatan() {
         setTriger(!triger);
       }
     } catch (err) {
-      console.log();
+      console.log(err);
     }
   };
 
@@ -167,7 +185,7 @@ export default function DaftarKegiatan() {
     <Box sx={{ backgroundColor: "#F7F8FB" }}>
       <Header />
       <Navbar />
-      <div>
+      <div className="modal-tambah-kegiatan">
         <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
             <Box display={"flex"} justifyContent={"space-between"}>
@@ -183,7 +201,7 @@ export default function DaftarKegiatan() {
               </Box>
               <Box>
                 <Typography fontSize={"12px"}>Tanggal Berakhir</Typography>
-                <DatePicker selected={endDate && endDate} onChange={(e) => handleOnchangeKegiatan("tgl_akhr", e)} />
+                <DatePicker selected={endDate && endDate} onChange={(e) => handleOnchangeKegiatan("tgl_berakhir", e)} />
               </Box>
               <Box>
                 <Typography fontSize={"12px"}>Waktu Mulai</Typography>
@@ -202,7 +220,7 @@ export default function DaftarKegiatan() {
                 <Typography fontSize={"12px"}>Waktu Berakhir</Typography>
                 <DatePicker
                   selected={selectedTimeEnd && selectedTimeEnd}
-                  onChange={(e) => handleOnchangeKegiatan("waktu_akr", e)}
+                  onChange={(e) => handleOnchangeKegiatan("waktu_berakhir", e)}
                   dateFormat="HH:mm"
                   showTimeSelect
                   showTimeSelectOnly
@@ -220,7 +238,7 @@ export default function DaftarKegiatan() {
               <Typography>Nama Proyek</Typography>
               <FormControl fullWidth>
                 <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
-                  <MenuItem sx={{ color: "red" }} onClick={tambahProyek}>
+                  <MenuItem className="modal-tambah-proyek" sx={{ color: "red" }} onClick={tambahProyek}>
                     + Tambah Proyek
                   </MenuItem>
                   {dataProyek?.map((item) => (
