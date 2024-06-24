@@ -1,5 +1,5 @@
 import Header from "./component/header";
-import { Autocomplete, Box, Button, FormControl, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormControl, IconButton, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
 import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
@@ -9,6 +9,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
+import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
   position: "absolute",
@@ -188,14 +189,16 @@ export default function DaftarKegiatan() {
       <div className="modal-tambah-kegiatan">
         <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
-            <Box display={"flex"} justifyContent={"space-between"}>
+            <Box display={"flex"} justifyContent={"space-between"} marginY={1}>
               <Typography id="modal-modal-title" fontSize={"12px"} fontWeight={"bold"}>
                 Tambah Kegiatan Baru
               </Typography>
-              <Typography id="modal-modal-description">X</Typography>
+              <IconButton open={open} onClick={handleClose} sx={{ color: "black", margin: 0, padding: 0 }}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
             </Box>
 
-            <Box display={"flex"} gap={5} color={"#808080"}>
+            <Box display={"flex"} gap={7} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Tanggal Mulai</Typography>
                 <DatePicker selected={startDate && startDate} onChange={(e) => handleOnchangeKegiatan("tgl_mulai", e)} placeholderText="Pilih Tanggal" />
@@ -206,7 +209,7 @@ export default function DaftarKegiatan() {
               </Box>
             </Box>
 
-            <Box display={"flex"} gap={5} color={"#808080"}>
+            <Box display={"flex"} gap={7} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Waktu Mulai</Typography>
                 <DatePicker
@@ -240,7 +243,7 @@ export default function DaftarKegiatan() {
             </Box>
             <Box color={"#808080"}>
               <Typography>Nama Proyek</Typography>
-              <FormControl fullWidth>
+              <FormControl fullWidth size="small">
                 <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama || ""} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
                   <MenuItem className="modal-tambah-proyek" sx={{ color: "red" }} onClick={tambahProyek}>
                     + Tambah Proyek
@@ -253,8 +256,14 @@ export default function DaftarKegiatan() {
                 </Select>
               </FormControl>
             </Box>
-            <Box>
-              <Button onClick={handleAddKegiatan}>tambah</Button>
+
+            <Box sx={{ display: "flex", justifyContent: "end", gap: 2, margin: 2 }}>
+              <Button open={open} onClick={handleClose} sx={{ backgroundColor: "#F7F8FB", width: "20%", color: "#F15858", fontSize: "10px" }} variant="text">
+                Kembali
+              </Button>
+              <Button onClick={handleAddKegiatan} sx={{ backgroundColor: "#F15858", width: "20%", fontSize: "10px" }} variant="contained" color="error">
+                Simpan
+              </Button>
             </Box>
           </Box>
         </Modal>
@@ -288,67 +297,65 @@ export default function DaftarKegiatan() {
       </Box>
       <Box m={3}>
         {dataKaryawan.length !== 0 &&
-          dataKaryawan.map((item) => {
+          dataKaryawan.map((item, index) => {
             return (
-              <>
-                <Paper sx={{ marginBottom: "10px" }}>
-                  <Box p={2} display="flex" sx={{ gap: 5, borderBottom: "2px solid #F7F8FB" }}>
-                    <Box>
-                      <Typography sx={{ fontSize: "14px" }}>Nama Karyawan</Typography>
-                      <Typography>{item.nama}</Typography>
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontSize: "14px" }}>Rate</Typography>
-                      <Typography>{item.rate}</Typography>
-                    </Box>
+              <Paper key={index} sx={{ marginBottom: "10px" }}>
+                <Box p={2} display="flex" sx={{ gap: 5, borderBottom: "2px solid #F7F8FB" }}>
+                  <Box>
+                    <Typography sx={{ fontSize: "14px" }}>Nama Karyawan</Typography>
+                    <Typography>{item.nama}</Typography>
                   </Box>
-                  <Box p={2} display={"flex"} justifyContent={"space-between"} alignItems="center">
-                    <Box display={"flex"} gap={3}>
-                      <Typography variant="h6">Daftar Kegiatan</Typography>
-                      <Button onClick={() => handleOpen(item.id)} variant="outlined" size="small" startIcon={<AddCircleOutlineTwoToneIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
-                        Tambah Kegiatan
-                      </Button>
-                    </Box>
-                    <Box>
-                      <Autocomplete
-                        disablePortal
-                        id="free-solo-demo"
-                        freeSolo
-                        options={contoh}
-                        sx={{ width: 200 }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant="outlined"
-                            size="small"
-                            InputProps={{
-                              ...params.InputProps,
-                              startAdornment: (
-                                <Box display="flex" alignItems="center" sx={{ mr: 1 }}>
-                                  <SearchIcon sx={{ color: "gray", fontSize: "20px" }} />
-                                  {params.InputProps.startAdornment}
-                                </Box>
-                              ),
-                            }}
-                            label="cari"
-                          />
-                        )}
-                      />
-                    </Box>
+                  <Box>
+                    <Typography sx={{ fontSize: "14px" }}>Rate</Typography>
+                    <Typography>{item.rate}</Typography>
                   </Box>
-                  <Box sx={{ height: 300, width: "100%" }}>
-                    <DataGrid rows={item.kegiatan?.length > 0 ? item.kegiatan : []} columns={columnKegiatan} localeText={{ noRowsLabel: "Tidak Ada Kegiatan" }} />
+                </Box>
+                <Box p={2} display={"flex"} justifyContent={"space-between"} alignItems="center">
+                  <Box display={"flex"} gap={3}>
+                    <Typography variant="h6">Daftar Kegiatan</Typography>
+                    <Button onClick={() => handleOpen(item.id)} variant="outlined" size="small" startIcon={<AddCircleOutlineTwoToneIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
+                      Tambah Kegiatan
+                    </Button>
                   </Box>
-                  <Box display={"flex"} justifyContent={"space-between"} padding={2} color={"#2775EC"}>
-                    <Typography>Total Durasi</Typography>
-                    <Typography>8 Jam 50 Menit</Typography>
+                  <Box>
+                    <Autocomplete
+                      disablePortal
+                      id="free-solo-demo"
+                      freeSolo
+                      options={contoh}
+                      sx={{ width: 200 }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <Box display="flex" alignItems="center" sx={{ mr: 1 }}>
+                                <SearchIcon sx={{ color: "gray", fontSize: "20px" }} />
+                                {params.InputProps.startAdornment}
+                              </Box>
+                            ),
+                          }}
+                          label="cari"
+                        />
+                      )}
+                    />
                   </Box>
-                  <Box display={"flex"} justifyContent={"space-between"} padding={2} marginTop={-3} color={"#2775EC"}>
-                    <Typography fontWeight={600}>Total Pendapatan</Typography>
-                    <Typography fontWeight={600}>Rp200000</Typography>
-                  </Box>
-                </Paper>
-              </>
+                </Box>
+                <Box sx={{ height: 300, width: "100%" }}>
+                  <DataGrid rows={item.kegiatan?.length > 0 ? item.kegiatan : []} columns={columnKegiatan} localeText={{ noRowsLabel: "Tidak Ada Kegiatan" }} />
+                </Box>
+                <Box display={"flex"} justifyContent={"space-between"} padding={2} color={"#2775EC"}>
+                  <Typography>Total Durasi</Typography>
+                  <Typography>8 Jam 50 Menit</Typography>
+                </Box>
+                <Box display={"flex"} justifyContent={"space-between"} padding={2} marginTop={-3} color={"#2775EC"}>
+                  <Typography fontWeight={600}>Total Pendapatan</Typography>
+                  <Typography fontWeight={600}>Rp200000</Typography>
+                </Box>
+              </Paper>
             );
           })}
       </Box>
