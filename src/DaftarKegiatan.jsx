@@ -16,7 +16,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 700,
   bgcolor: "background.paper",
   borderRadius: "10px",
   boxShadow: 24,
@@ -142,6 +142,7 @@ export default function DaftarKegiatan() {
         setOpenProyek(false);
         setOpen(true);
         setTriger(!triger);
+        alert("Tambah Proyek Baru Berhasil.");
       }
       console.log(add);
     } catch (err) {
@@ -186,19 +187,19 @@ export default function DaftarKegiatan() {
     <Box sx={{ backgroundColor: "#F7F8FB" }}>
       <Header />
       <Navbar />
+      {/* Modal Tambah Kegiatan */}
       <div className="modal-tambah-kegiatan">
         <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
             <Box display={"flex"} justifyContent={"space-between"} marginY={1}>
-              <Typography id="modal-modal-title" fontSize={"12px"} fontWeight={"bold"}>
+              <Typography id="modal-modal-title" fontSize={"14px"} fontWeight={"bold"}>
                 Tambah Kegiatan Baru
               </Typography>
               <IconButton open={open} onClick={handleClose} sx={{ color: "black", margin: 0, padding: 0 }}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </Box>
-
-            <Box display={"flex"} gap={7} color={"#808080"}>
+            <Box display={"flex"} gap={1} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Tanggal Mulai</Typography>
                 <DatePicker selected={startDate && startDate} onChange={(e) => handleOnchangeKegiatan("tgl_mulai", e)} placeholderText="Pilih Tanggal" />
@@ -207,9 +208,6 @@ export default function DaftarKegiatan() {
                 <Typography fontSize={"12px"}>Tanggal Berakhir</Typography>
                 <DatePicker selected={endDate && endDate} onChange={(e) => handleOnchangeKegiatan("tgl_berakhir", e)} placeholderText="Pilih Tanggal" />
               </Box>
-            </Box>
-
-            <Box display={"flex"} gap={7} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Waktu Mulai</Typography>
                 <DatePicker
@@ -244,7 +242,7 @@ export default function DaftarKegiatan() {
             <Box color={"#808080"}>
               <Typography>Nama Proyek</Typography>
               <FormControl fullWidth size="small">
-                <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama || ""} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
+                <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
                   <MenuItem className="modal-tambah-proyek" sx={{ color: "red" }} onClick={tambahProyek}>
                     + Tambah Proyek
                   </MenuItem>
@@ -256,7 +254,6 @@ export default function DaftarKegiatan() {
                 </Select>
               </FormControl>
             </Box>
-
             <Box sx={{ display: "flex", justifyContent: "end", gap: 2, margin: 2 }}>
               <Button open={open} onClick={handleClose} sx={{ backgroundColor: "#F7F8FB", width: "20%", color: "#F15858", fontSize: "10px" }} variant="text">
                 Kembali
@@ -268,6 +265,9 @@ export default function DaftarKegiatan() {
           </Box>
         </Modal>
       </div>
+      {/* Aklhir Modal Tambah Kegiatan */}
+
+      {/* Modal Tambah Proyek */}
       <Box>
         <Modal open={openProyek} onClose={handleCloseProyek} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
@@ -277,7 +277,6 @@ export default function DaftarKegiatan() {
               </Typography>
               <Typography id="modal-modal-description">X</Typography>
             </Box>
-
             <Box>
               <Typography fontSize={"12px"}>Nama Proyek *</Typography>
               <TextField
@@ -288,13 +287,20 @@ export default function DaftarKegiatan() {
                 }}
               />
             </Box>
-            <Box>
-              <Button onClick={handleCloseProyek}>Kembali</Button>
-              <Button onClick={handleAddProyek}>Tambah</Button>
+            <Box sx={{ display: "flex", justifyContent: "end", gap: 2, margin: 2 }}>
+              <Button onClick={handleCloseProyek} sx={{ backgroundColor: "#F7F8FB", width: "20%", color: "#F15858", fontSize: "10px" }} variant="text">
+                Kembali
+              </Button>
+              <Button onClick={handleAddProyek} sx={{ backgroundColor: "#F15858", width: "20%", fontSize: "10px" }} variant="contained" color="error">
+                Simpan
+              </Button>
             </Box>
           </Box>
         </Modal>
       </Box>
+      {/* Akhir Modal Tambah Proyek */}
+
+      {/* Daftar Kegiatan */}
       <Box m={3}>
         {dataKaryawan.length !== 0 &&
           dataKaryawan.map((item, index) => {
@@ -313,6 +319,7 @@ export default function DaftarKegiatan() {
                 <Box p={2} display={"flex"} justifyContent={"space-between"} alignItems="center">
                   <Box display={"flex"} gap={3}>
                     <Typography variant="h6">Daftar Kegiatan</Typography>
+                    {/* Button Tambah Kegiatan */}
                     <Button onClick={() => handleOpen(item.id)} variant="outlined" size="small" startIcon={<AddCircleOutlineTwoToneIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
                       Tambah Kegiatan
                     </Button>
@@ -359,6 +366,7 @@ export default function DaftarKegiatan() {
             );
           })}
       </Box>
+      {/* Akhir daftar kegiatan */}
     </Box>
   );
 }
