@@ -4,7 +4,7 @@ import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwo
 import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
 import { useEffect, useState } from "react";
-import { addKegiatan, addProyek, deleteKegiatan, getKaryawan, getProyek } from "./service";
+import { addKegiatan, addProyek, deleteKaryawan, deleteKegiatan, deleteProyek, getKaryawan, getProyek } from "./service";
 import { DataGrid } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -108,6 +108,15 @@ export default function DaftarKegiatan() {
     }
   };
 
+  const handleDeleteKaryawan = async (id) => {
+    const result = await deleteKaryawan(id);
+    if (result === "success") {
+      setTriger(!triger);
+    } else {
+      console.error(`Failed to delete row with id: ${id}`);
+    }
+  };
+
   const getDataProyek = async () => {
     try {
       const fetch = await getProyek();
@@ -125,6 +134,16 @@ export default function DaftarKegiatan() {
   const handleCloseProyek = () => {
     setOpenProyek(false);
     setOpen(true);
+  };
+
+  const handleDeleteProyek = async (id) => {
+    const result = await deleteProyek(id);
+    if (result === "success") {
+      setTriger(!triger);
+      console.log(`Data proyek id: ${id} berhasil dihapus `);
+    } else {
+      console.error(`Failed to delete row with id: ${id}`);
+    }
   };
 
   const handleChangeAddProyek = (e) => {
@@ -286,8 +305,11 @@ export default function DaftarKegiatan() {
                     + Tambah Proyek
                   </MenuItem>
                   {dataProyek?.map((item) => (
-                    <MenuItem key={item.id} value={item.nama_proyek}>
+                    <MenuItem sx={{ justifyContent: "space-between" }} key={item.id} value={item.nama_proyek}>
                       {item.nama_proyek}
+                      <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDeleteProyek(item.id)}>
+                        <DeleteIcon />
+                      </IconButton>
                     </MenuItem>
                   ))}
                 </Select>
@@ -314,7 +336,9 @@ export default function DaftarKegiatan() {
               <Typography id="modal-modal-title" fontSize={"12px"} fontWeight={"bold"}>
                 Tambah Proyek Baru
               </Typography>
-              <Typography id="modal-modal-description">X</Typography>
+              <IconButton open={open} onClick={handleCloseProyek} sx={{ color: "black", margin: 0, padding: 0 }}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
             </Box>
             <Box>
               <Typography fontSize={"12px"}>Nama Proyek *</Typography>
@@ -345,16 +369,24 @@ export default function DaftarKegiatan() {
           dataKaryawan.map((item, index) => {
             return (
               <Paper key={index} sx={{ marginBottom: "10px" }}>
-                <Box p={2} display="flex" sx={{ gap: 5, borderBottom: "2px solid #F7F8FB" }}>
-                  <Box>
-                    <Typography sx={{ fontSize: "14px" }}>Nama Karyawan</Typography>
-                    <Typography>{item.nama}</Typography>
+                <Box p={2} display="flex" justifyContent="space-between" sx={{ borderBottom: "2px solid #F7F8FB" }}>
+                  <Box display="flex" flexDirection="row" sx={{ gap: 10 }}>
+                    <Box>
+                      <Typography sx={{ fontSize: "14px" }}>Nama Karyawan</Typography>
+                      <Typography>{item.nama}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontSize: "14px" }}>Rate</Typography>
+                      <Typography>Rp.{item.rate}/Jam</Typography>
+                    </Box>
                   </Box>
-                  <Box>
-                    <Typography sx={{ fontSize: "14px" }}>Rate</Typography>
-                    <Typography>{item.rate}</Typography>
+                  <Box display="flex" alignItems="center">
+                    <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDeleteKaryawan(item.id)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </Box>
                 </Box>
+
                 <Box p={2} display={"flex"} justifyContent={"space-between"} alignItems="center">
                   <Box display={"flex"} gap={3}>
                     <Typography variant="h6">Daftar Kegiatan</Typography>
@@ -379,15 +411,16 @@ export default function DaftarKegiatan() {
 
                 <DataGrid
                   autoHeight
-                  rows={filterKegiatan(dataKaryawan.flatMap((karyawan) => karyawan.kegiatan))}
+                  rows={filterKegiatan(item.kegiatan?.length > 0 ? item.kegiatan : [])}
                   columns={columnKegiatan}
                   pageSize={5}
                   rowsPerPageOptions={[5, 10, 20]}
                   localeText={{
-                    noRowsLabel: "No activities yet",
+                    noRowsLabel: "Belum Ada Kegiatan",
                     footerRowSelected: (count) => (count !== 1 ? `${count.toLocaleString()} rows selected` : `${count.toLocaleString()} row selected`),
                   }}
                 />
+
                 <Box display={"flex"} justifyContent={"space-between"} padding={2} color={"#2775EC"}>
                   <Typography>Total Durasi</Typography>
                   <Typography>8 Jam 50 Menit</Typography>

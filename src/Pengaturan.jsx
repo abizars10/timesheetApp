@@ -3,8 +3,10 @@ import Header from "./component/header";
 import Navbar from "./component/navbar";
 import { useState } from "react";
 import { addKaryawan } from "./service";
+import { useNavigate } from "react-router-dom";
 
 export default function Pengaturan() {
+  const navigate = useNavigate();
   const [dataKaryawan, setDataKaryawan] = useState({ nama: "", rate: "" });
   const [errors, setErrors] = useState({
     nama: "",
@@ -46,8 +48,8 @@ export default function Pengaturan() {
   const handleSubmit = async () => {
     if (dataKaryawan.nama !== "" && dataKaryawan.rate !== "") {
       try {
-        const fetch = await addKaryawan(dataKaryawan);
-        console.log(fetch);
+        await addKaryawan(dataKaryawan);
+        navigate("/");
       } catch (err) {
         console.log(err);
       }

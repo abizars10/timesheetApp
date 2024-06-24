@@ -1,5 +1,6 @@
 const baseURL = "http://localhost:3000/";
 
+// karyawan
 export async function addKaryawan(data) {
   try {
     const response = await fetch(`${baseURL}karyawan`, {
@@ -28,6 +29,26 @@ export async function getKaryawan() {
   } catch (err) {
     console.error("Error fetching data:", err);
     throw err;
+  }
+}
+
+export async function deleteKaryawan(id) {
+  try {
+    const response = await fetch(`${baseURL}karyawan/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete project");
+    }
+
+    return "success";
+  } catch (err) {
+    console.log(err);
+    return "error";
   }
 }
 
@@ -68,6 +89,27 @@ export async function addProyek(params) {
   }
 }
 
+export async function deleteProyek(id) {
+  try {
+    const response = await fetch(`${baseURL}proyek/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete project");
+    }
+
+    return "success";
+  } catch (err) {
+    console.log(err);
+    return "error";
+  }
+}
+
+// Kegiatan
 export async function getKegiatan() {
   try {
     const response = await fetch(`${baseURL}kegiatan`, {
