@@ -158,7 +158,7 @@ export default function DaftarKegiatan() {
     const durasiMenit = waktuSelesai.diff(waktuMulai, "minute");
     const durasiJam = Math.floor(durasiMenit / 60);
     const durasiSisaMenit = durasiMenit % 60;
-    const durasi = `${durasiJam} jam ${durasiSisaMenit} menit`;
+    const durasi = durasiJam === 0 ? `${durasiSisaMenit} menit` : durasiSisaMenit === 0 ? `${durasiJam} jam` : `${durasiJam} jam ${durasiSisaMenit} menit`;
     console.log(durasi);
     const params = {
       ...dataAddKegiatan,
@@ -194,15 +194,19 @@ export default function DaftarKegiatan() {
               </Typography>
               <Typography id="modal-modal-description">X</Typography>
             </Box>
-            <Box display={"flex"}>
+
+            <Box display={"flex"} gap={5} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Tanggal Mulai</Typography>
-                <DatePicker selected={startDate && startDate} onChange={(e) => handleOnchangeKegiatan("tgl_mulai", e)} />
+                <DatePicker selected={startDate && startDate} onChange={(e) => handleOnchangeKegiatan("tgl_mulai", e)} placeholderText="Pilih Tanggal" />
               </Box>
               <Box>
                 <Typography fontSize={"12px"}>Tanggal Berakhir</Typography>
-                <DatePicker selected={endDate && endDate} onChange={(e) => handleOnchangeKegiatan("tgl_berakhir", e)} />
+                <DatePicker selected={endDate && endDate} onChange={(e) => handleOnchangeKegiatan("tgl_berakhir", e)} placeholderText="Pilih Tanggal" />
               </Box>
+            </Box>
+
+            <Box display={"flex"} gap={5} color={"#808080"}>
               <Box>
                 <Typography fontSize={"12px"}>Waktu Mulai</Typography>
                 <DatePicker
@@ -230,14 +234,14 @@ export default function DaftarKegiatan() {
                 />
               </Box>
             </Box>
-            <Box>
+            <Box color={"#808080"} marginTop={1}>
               <Typography>Judul Kegiatan</Typography>
-              <TextField placeholder="Judul Kegiatan" size="small" sx={{ width: "100%" }} onChange={(e) => handleOnchangeKegiatan("judul", e.target.value)} />
+              <TextField size="small" sx={{ width: "100%" }} onChange={(e) => handleOnchangeKegiatan("judul", e.target.value)} />
             </Box>
-            <Box>
+            <Box color={"#808080"}>
               <Typography>Nama Proyek</Typography>
               <FormControl fullWidth>
-                <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
+                <Select labelId="demo-select-small-label" id="demo-select-small" value={dataAddProyek.nama || ""} label="Age" onChange={(e) => handleOnchangeKegiatan("proyek", e.target.value)}>
                   <MenuItem className="modal-tambah-proyek" sx={{ color: "red" }} onClick={tambahProyek}>
                     + Tambah Proyek
                   </MenuItem>
