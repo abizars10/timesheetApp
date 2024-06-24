@@ -102,7 +102,6 @@ export default function DaftarKegiatan() {
   };
 
   const handleOnchangeKegiatan = (nama, value) => {
-    console.log(`${nama}, ${value}`);
     if (nama === "tgl_mulai") {
       setStartDate(value);
       setDataKegiatan({
@@ -144,7 +143,6 @@ export default function DaftarKegiatan() {
         setTriger(!triger);
         alert("Tambah Proyek Baru Berhasil.");
       }
-      console.log(add);
     } catch (err) {
       console.log(err);
     }
@@ -161,12 +159,10 @@ export default function DaftarKegiatan() {
     const durasiJam = Math.floor(durasiMenit / 60);
     const durasiSisaMenit = durasiMenit % 60;
     const durasi = durasiJam === 0 ? `${durasiSisaMenit} menit` : durasiSisaMenit === 0 ? `${durasiJam} jam` : `${durasiJam} jam ${durasiSisaMenit} menit`;
-    console.log(durasi);
     const params = {
       ...dataAddKegiatan,
       durasi: durasi,
     };
-    console.log(params);
     try {
       const add = await addKegiatan(params);
       if (add === "success") {

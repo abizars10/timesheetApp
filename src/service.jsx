@@ -82,7 +82,6 @@ export async function getKegiatan() {
   }
 }
 export async function addKegiatan(params) {
-  console.log(params, "1111111111111111");
   try {
     const response = await fetch(`${baseURL}kegiatan`, {
       method: "POST",
