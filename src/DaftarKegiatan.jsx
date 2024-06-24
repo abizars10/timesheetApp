@@ -1,15 +1,17 @@
 import Header from "./component/header";
-import { Autocomplete, Box, Button, FormControl, IconButton, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, IconButton, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
 import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
 import { useEffect, useState } from "react";
-import { addKegiatan, addProyek, getKaryawan, getProyek } from "./service";
+import { addKegiatan, addProyek, deleteKegiatan, getKaryawan, getProyek } from "./service";
 import { DataGrid } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const style = {
   position: "absolute",
@@ -46,9 +48,10 @@ export default function DaftarKegiatan() {
   const [endDate, setEndDate] = useState();
   const [selectedTime, setSelectedTime] = useState();
   const [selectedTimeEnd, setSelectedTimeEnd] = useState();
-  const contoh = [{ label: "The Shawshank Redemption" }, { label: "The Godfather" }, { label: "The Godfather: Part II" }];
   const [open, setOpen] = useState(false);
   const [openProyek, setOpenProyek] = useState(false);
+  const [filterValue, setFilterValue] = useState("");
+
   const handleOpen = (item) => {
     setOpen(true);
     setDataKegiatan({ ...dataAddKegiatan, id_karyawan: item });
@@ -56,6 +59,19 @@ export default function DaftarKegiatan() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleEdit = (id) => {
+    console.log(`Edit row with id: ${id}`);
+  };
+
+  const handleDelete = async (id) => {
+    const result = await deleteKegiatan(id);
+    if (result === "success") {
+      setTriger(!triger);
+    } else {
+      console.error(`Failed to delete row with id: ${id}`);
+    }
   };
 
   const columnKegiatan = [
@@ -66,7 +82,21 @@ export default function DaftarKegiatan() {
     { field: "waktu_mulai", headerName: "Waktu Mulai", width: 150 },
     { field: "waktu_berakhir", headerName: "Waktu Berakhir", width: 125 },
     { field: "durasi", headerName: "Durasi", width: 150 },
-    { field: "aksi", headerName: "AKSI", width: 100 },
+    {
+      field: "aksi",
+      headerName: "AKSI",
+      width: 100,
+      renderCell: (params) => (
+        <>
+          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
   ];
 
   const getDataKaryawan = async () => {
@@ -178,6 +208,19 @@ export default function DaftarKegiatan() {
     getDataKaryawan();
     getDataProyek();
   }, [triger]);
+
+  const filterKegiatan = (kegiatan) => {
+    return kegiatan.filter(
+      (item) =>
+        item.proyek.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.judul.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.tgl_mulai.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.tgl_berakhir.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.waktu_mulai.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.waktu_berakhir.toLowerCase().includes(filterValue.toLowerCase()) ||
+        item.durasi.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  };
 
   return (
     <Box sx={{ backgroundColor: "#F7F8FB" }}>
@@ -321,35 +364,30 @@ export default function DaftarKegiatan() {
                     </Button>
                   </Box>
                   <Box>
-                    <Autocomplete
-                      disablePortal
-                      id="free-solo-demo"
-                      freeSolo
-                      options={contoh}
-                      sx={{ width: 200 }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          size="small"
-                          InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                              <Box display="flex" alignItems="center" sx={{ mr: 1 }}>
-                                <SearchIcon sx={{ color: "gray", fontSize: "20px" }} />
-                                {params.InputProps.startAdornment}
-                              </Box>
-                            ),
-                          }}
-                          label="cari"
-                        />
-                      )}
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      placeholder="Cari"
+                      value={filterValue}
+                      onChange={(e) => setFilterValue(e.target.value)}
+                      InputProps={{
+                        startAdornment: <SearchIcon />,
+                      }}
                     />
                   </Box>
                 </Box>
-                <Box sx={{ height: 300, width: "100%" }}>
-                  <DataGrid rows={item.kegiatan?.length > 0 ? item.kegiatan : []} columns={columnKegiatan} localeText={{ noRowsLabel: "Tidak Ada Kegiatan" }} />
-                </Box>
+
+                <DataGrid
+                  autoHeight
+                  rows={filterKegiatan(dataKaryawan.flatMap((karyawan) => karyawan.kegiatan))}
+                  columns={columnKegiatan}
+                  pageSize={5}
+                  rowsPerPageOptions={[5, 10, 20]}
+                  localeText={{
+                    noRowsLabel: "No activities yet",
+                    footerRowSelected: (count) => (count !== 1 ? `${count.toLocaleString()} rows selected` : `${count.toLocaleString()} row selected`),
+                  }}
+                />
                 <Box display={"flex"} justifyContent={"space-between"} padding={2} color={"#2775EC"}>
                   <Typography>Total Durasi</Typography>
                   <Typography>8 Jam 50 Menit</Typography>

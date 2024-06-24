@@ -99,3 +99,23 @@ export async function addKegiatan(params) {
     console.log(err);
   }
 }
+
+export async function deleteKegiatan(id) {
+  try {
+    const response = await fetch(`${baseURL}kegiatan/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete project");
+    }
+
+    return "success";
+  } catch (err) {
+    console.log(err);
+    return "error";
+  }
+}
