@@ -45,6 +45,11 @@ export default function Pengaturan() {
     }
   };
 
+  const handleReset = () => {
+    setDataKaryawan({ nama: "", rate: "" });
+    setErrors({ nama: "", rate: "" });
+  };
+
   const handleSubmit = async () => {
     if (dataKaryawan.nama !== "" && dataKaryawan.rate !== "") {
       try {
@@ -102,7 +107,7 @@ export default function Pengaturan() {
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-            <Button sx={{ backgroundColor: "#F7F8FB", width: "48%", color: "#2775EC", fontSize: "10px" }} variant="text">
+            <Button sx={{ backgroundColor: "#F7F8FB", width: "48%", color: "#2775EC", fontSize: "10px" }} variant="text" onClick={handleReset}>
               Batalkan
             </Button>
             <Button sx={{ backgroundColor: "#2775EC", width: "48%", fontSize: "10px" }} variant="contained" onClick={handleSubmit}>

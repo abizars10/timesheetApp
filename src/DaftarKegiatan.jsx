@@ -403,7 +403,7 @@ export default function DaftarKegiatan() {
                       value={filterValue}
                       onChange={(e) => setFilterValue(e.target.value)}
                       InputProps={{
-                        startAdornment: <SearchIcon />,
+                        startAdornment: <SearchIcon sx={{ color: "#d3d3d3" }} />,
                       }}
                     />
                   </Box>
