@@ -4,7 +4,7 @@ import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwo
 import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
 import { useEffect, useState } from "react";
-import { addKegiatan, addProyek, deleteKaryawan, deleteKegiatan, deleteProyek, getKaryawan, getProyek } from "./service";
+import { addKegiatan, addProyek, deleteKaryawan, deleteKegiatan, getKaryawan, getProyek } from "./service";
 import { DataGrid } from "@mui/x-data-grid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -75,11 +75,11 @@ export default function DaftarKegiatan() {
   };
 
   const columnKegiatan = [
-    { field: "judul", headerName: "Judul Kegiatan", width: 200 },
+    { field: "judul", headerName: "Judul Kegiatan", width: 225 },
     { field: "proyek", headerName: "Nama Proyek", width: 200 },
-    { field: "tgl_mulai", headerName: "Tanggal Mulai", width: 150 },
+    { field: "tgl_mulai", headerName: "Tanggal Mulai", width: 125 },
     { field: "tgl_berakhir", headerName: "Tanggal Berakhir", width: 125 },
-    { field: "waktu_mulai", headerName: "Waktu Mulai", width: 150 },
+    { field: "waktu_mulai", headerName: "Waktu Mulai", width: 125 },
     { field: "waktu_berakhir", headerName: "Waktu Berakhir", width: 125 },
     { field: "durasi", headerName: "Durasi", width: 150 },
     {
@@ -89,10 +89,10 @@ export default function DaftarKegiatan() {
       renderCell: (params) => (
         <>
           <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
-            <EditIcon />
+            <EditIcon fontSize={"small"} />
           </IconButton>
           <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
-            <DeleteIcon />
+            <DeleteIcon fontSize={"small"} />
           </IconButton>
         </>
       ),
@@ -134,16 +134,6 @@ export default function DaftarKegiatan() {
   const handleCloseProyek = () => {
     setOpenProyek(false);
     setOpen(true);
-  };
-
-  const handleDeleteProyek = async (id) => {
-    const result = await deleteProyek(id);
-    if (result === "success") {
-      setTriger(!triger);
-      console.log(`Data proyek id: ${id} berhasil dihapus `);
-    } else {
-      console.error(`Failed to delete row with id: ${id}`);
-    }
   };
 
   const handleChangeAddProyek = (e) => {
@@ -307,9 +297,6 @@ export default function DaftarKegiatan() {
                   {dataProyek?.map((item) => (
                     <MenuItem sx={{ justifyContent: "space-between" }} key={item.id} value={item.nama_proyek}>
                       {item.nama_proyek}
-                      <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDeleteProyek(item.id)}>
-                        <DeleteIcon />
-                      </IconButton>
                     </MenuItem>
                   ))}
                 </Select>
@@ -410,6 +397,7 @@ export default function DaftarKegiatan() {
                 </Box>
 
                 <DataGrid
+                  sx={{ marginX: "15px" }}
                   autoHeight
                   rows={filterKegiatan(item.kegiatan?.length > 0 ? item.kegiatan : [])}
                   columns={columnKegiatan}
@@ -425,7 +413,7 @@ export default function DaftarKegiatan() {
                   <Typography>Total Durasi</Typography>
                   <Typography>8 Jam 50 Menit</Typography>
                 </Box>
-                <Box display={"flex"} justifyContent={"space-between"} padding={2} marginTop={-3} color={"#2775EC"}>
+                <Box display={"flex"} justifyContent={"space-between"} padding={2} marginTop={-4} color={"#2775EC"}>
                   <Typography fontWeight={600}>Total Pendapatan</Typography>
                   <Typography fontWeight={600}>Rp200000</Typography>
                 </Box>
