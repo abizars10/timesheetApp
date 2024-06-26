@@ -1,19 +1,16 @@
+import { Box, Typography } from "@mui/material";
+
 export default function Header() {
   return (
     <header>
-      <p className="p-3 pt-2 fs-2">HH Timesheet</p>
-      <ul className="nav nav-underline shadow-sm ps-5 ">
-        <li className="nav-item">
-          <a className="nav-link" href="#">
-            Daftar Kegiatan
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#">
-            Pengaturan
-          </a>
-        </li>
-      </ul>
+      <Box sx={{ display: "flex", backgroundColor: "#fff", color: "#F15858", paddingY: "5px", paddingLeft: "15px", margin: "5px" }}>
+        <div className="container-fluid">
+          <Typography sx={{ fontWeight: "bold", lineHeight: "10px" }}>
+            <span style={{ fontSize: "14px" }}>Timesheet</span> <br />
+            <span style={{ fontSize: "12px" }}>Management</span>
+          </Typography>
+        </div>
+      </Box>
     </header>
   );
 }
