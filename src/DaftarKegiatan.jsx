@@ -1,5 +1,5 @@
 import Header from "./component/header";
-import { Box, Button, FormControl, IconButton, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, FormControl, IconButton, MenuItem, Modal, Paper, Select, Snackbar, TextField, Typography } from "@mui/material";
 import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
 import SearchIcon from "@mui/icons-material/Search";
 import Navbar from "./component/navbar";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from "@mui/icons-material/Check";
 
 const style = {
   position: "absolute",
@@ -49,8 +50,16 @@ export default function DaftarKegiatan() {
   const [selectedTime, setSelectedTime] = useState();
   const [selectedTimeEnd, setSelectedTimeEnd] = useState();
   const [open, setOpen] = useState(false);
+  const [alert, setAlert] = useState(false);
   const [openProyek, setOpenProyek] = useState(false);
   const [filterValue, setFilterValue] = useState("");
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert(false);
+  };
 
   const handleOpen = (item) => {
     setOpen(true);
@@ -180,7 +189,7 @@ export default function DaftarKegiatan() {
         setOpenProyek(false);
         setOpen(true);
         setTriger(!triger);
-        alert("Tambah Proyek Baru Berhasil.");
+        setAlert(true);
       }
     } catch (err) {
       console.log(err);
@@ -207,6 +216,7 @@ export default function DaftarKegiatan() {
       if (add === "success") {
         setOpen(false);
         setTriger(!triger);
+        setAlert(true);
       }
     } catch (err) {
       console.log(err);
@@ -235,8 +245,17 @@ export default function DaftarKegiatan() {
     <Box sx={{ backgroundColor: "#F7F8FB" }}>
       <Header />
       <Navbar />
+      {/* Alert */}
+      <Box>
+        <Snackbar open={alert} autoHideDuration={6000} onClose={handleCloseAlert}>
+          <Alert onClose={handleCloseAlert} icon={<CheckIcon fontSize="inherit" />} severity="success" sx={{ width: "100%" }}>
+            Data Baru Berhasil Ditambahkan
+          </Alert>
+        </Snackbar>
+      </Box>
+
       {/* Modal Tambah Kegiatan */}
-      <div className="modal-tambah-kegiatan">
+      <Box className="modal-tambah-kegiatan">
         <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
           <Box sx={style}>
             <Box display={"flex"} justifyContent={"space-between"} marginY={1}>
@@ -312,7 +331,7 @@ export default function DaftarKegiatan() {
             </Box>
           </Box>
         </Modal>
-      </div>
+      </Box>
       {/* Aklhir Modal Tambah Kegiatan */}
 
       {/* Modal Tambah Proyek */}
