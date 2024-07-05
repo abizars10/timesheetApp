@@ -1,20 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --Red: #f15858;
-  --background-page: #f7f8fb;
-  --Blue: #2775ec;
-  --lightBlue: #f0f6ff;
-}
-
-*,
-html {
-  margin: 0;
-  font-family: "Nunito", sans-serif;
-}
-
 body {
-  /* overflow: hidden; */
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f8fb;
 }
