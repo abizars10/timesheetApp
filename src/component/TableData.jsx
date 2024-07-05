@@ -4,9 +4,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const columns = [
-  { field: "name", headerName: "Judul Kegiatan", width: 300 },
+  { field: "judul", headerName: "Judul Kegiatan", width: 210 },
   {
-    field: "position",
+    field: "proyek",
     headerName: "Nama Proyek",
     width: 200,
     editable: true,
@@ -42,6 +42,7 @@ const columns = [
     editable: true,
   },
   {
+    field: "aksi",
     headerName: "Aksi",
     width: 100,
     editable: true,
@@ -53,7 +54,7 @@ export default function TableData() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/karyawan");
+      const response = await axios.get("http://localhost:3000/kegiatan");
       setData(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error(err);
@@ -62,8 +63,8 @@ export default function TableData() {
 
   const transformData = (data) => {
     return data.map((item) => ({
-      id: item._id,
-      name: item.name,
+      id: item.id,
+      judul: item.judul,
       proyek: item.proyek,
       tgl_mulai: item.tgl_mulai,
       tgl_berakhir: item.tgl_berakhir,
@@ -92,7 +93,7 @@ export default function TableData() {
             },
           }}
           pageSizeOptions={[3]}
-          //   checkboxSelection
+          // checkboxSelection
           disableRowSelectionOnClick
         />
       </Box>
