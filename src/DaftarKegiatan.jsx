@@ -1,8 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Box, Typography } from "@mui/material";
 import TableData from "./component/TableData";
-// import TableData from "./Component/TableData";
-// import GetData from "./Component/GetData";
+import ModalForm from "./component/ModalForm";
 
 export default function DaftarKegiatan() {
   return (
@@ -20,15 +18,13 @@ export default function DaftarKegiatan() {
       <Box>
         <Box display={"flex"} padding={3} alignItems={"center"} gap={3}>
           <Typography fontWeight={"bold"}>Daftar Kegiatan</Typography>
-          <Button variant="outlined" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", Color: " #2775EC" }}>
-            Tambah Kegiatan
-          </Button>
+          <ModalForm />
         </Box>
       </Box>
       <Box>
         <TableData />
       </Box>
-      <Box sx={{ marginX: 3, backgroundColor: "#ddd", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
+      <Box sx={{ marginX: 3, backgroundColor: "#f4f0ec  ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
         <Box display={"flex"} justifyContent={"space-between"}>
           <Typography color={"#2775EC"}>Total Durasi</Typography>
           <Typography color={"#2775EC"}>10Jam 30Menit</Typography>

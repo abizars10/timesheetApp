@@ -92,8 +92,10 @@ export default function TableData() {
               },
             },
           }}
+          localeText={{
+            noRowsLabel: "Belum Ada Kegiatan",
+          }}
           pageSizeOptions={[3]}
-          // checkboxSelection
           disableRowSelectionOnClick
         />
       </Box>
