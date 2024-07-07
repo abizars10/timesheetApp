@@ -10,7 +10,7 @@ export default function DaftarKegiatan() {
   const fetchDataKaryawan = async () => {
     try {
       const response = await axios.get("http://localhost:3000/karyawan");
-      setDataKaryawan(response.data ? response.data : []);
+      setDataKaryawan(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error(err);
     }
