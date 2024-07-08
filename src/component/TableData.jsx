@@ -1,53 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-const columns = [
-  { field: "judul", headerName: "Judul Kegiatan", width: 210 },
-  {
-    field: "proyek",
-    headerName: "Nama Proyek",
-    width: 200,
-    editable: true,
-  },
-  {
-    field: "tgl_mulai",
-    headerName: "Tanggal Mulai",
-    width: 125,
-    editable: true,
-  },
-  {
-    field: "tgl_berakhir",
-    headerName: "Tanggal Berakhir",
-    width: 125,
-    editable: true,
-  },
-  {
-    field: "waktu_mulai",
-    headerName: "Waktu Mulai",
-    width: 125,
-    editable: true,
-  },
-  {
-    field: "waktu_berakhir",
-    headerName: "Waktu Berakhir",
-    width: 125,
-    editable: true,
-  },
-  {
-    field: "durasi",
-    headerName: "Durasi",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "aksi",
-    headerName: "Aksi",
-    width: 100,
-    editable: true,
-  },
-];
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function TableData() {
   const [data, setData] = useState([]);
@@ -72,6 +28,69 @@ export default function TableData() {
       waktu_berakhir: item.waktu_berakhir,
       durasi: item.durasi,
     }));
+  };
+
+  const columns = [
+    { field: "judul", headerName: "Judul Kegiatan", width: 210 },
+    {
+      field: "proyek",
+      headerName: "Nama Proyek",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "tgl_mulai",
+      headerName: "Tanggal Mulai",
+      width: 125,
+      editable: true,
+    },
+    {
+      field: "tgl_berakhir",
+      headerName: "Tanggal Berakhir",
+      width: 125,
+      editable: true,
+    },
+    {
+      field: "waktu_mulai",
+      headerName: "Waktu Mulai",
+      width: 125,
+      editable: true,
+    },
+    {
+      field: "waktu_berakhir",
+      headerName: "Waktu Berakhir",
+      width: 125,
+      editable: true,
+    },
+    {
+      field: "durasi",
+      headerName: "Durasi",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "aksi",
+      headerName: "Aksi",
+      width: 100,
+      renderCell: (params) => (
+        <Box>
+          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
+            <EditIcon fontSize={"small"} />
+          </IconButton>
+          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
+            <DeleteIcon fontSize={"small"} />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
+  const handleEdit = (id) => {
+    console.log(id);
+  };
+
+  const handleDelete = (id) => {
+    console.log(id);
   };
 
   useEffect(() => {
