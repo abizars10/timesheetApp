@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Box, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -5,7 +6,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData() {
+export default function TableData({ karyawanId }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -17,17 +18,20 @@ export default function TableData() {
     }
   };
 
-  const transformData = (data) => {
-    return data.map((item) => ({
-      id: item.id,
-      judul: item.judul,
-      proyek: item.proyek,
-      tgl_mulai: item.tgl_mulai,
-      tgl_berakhir: item.tgl_berakhir,
-      waktu_mulai: item.waktu_mulai,
-      waktu_berakhir: item.waktu_berakhir,
-      durasi: item.durasi,
-    }));
+  const processData = (data) => {
+    return data
+      .filter((item) => item.id_karyawan === karyawanId)
+      .map((item) => ({
+        id: item.id,
+        judul: item.judul,
+        proyek: item.proyek,
+        tgl_mulai: item.tgl_mulai,
+        tgl_berakhir: item.tgl_berakhir,
+        waktu_mulai: item.waktu_mulai,
+        waktu_berakhir: item.waktu_berakhir,
+        durasi: item.durasi,
+        id_karyawan: item.id_karyawan,
+      }));
   };
 
   const columns = [
@@ -109,7 +113,7 @@ export default function TableData() {
   return (
     <Box sx={{ marginX: 3 }}>
       <DataGrid
-        rows={transformData(data)}
+        rows={processData(data)}
         columns={columns}
         autoHeight
         initialState={{

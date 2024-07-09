@@ -8,14 +8,14 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 600,
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: "12px",
   p: 2,
 };
 
-export default function ModalForm() {
+export default function ModalForm({ karyawanId }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -23,13 +23,20 @@ export default function ModalForm() {
   const RequiredLabel = ({ children }) => (
     <Typography display="flex">
       {children}
-      <Typography color="red">*</Typography>
+      <Typography component={"span"} color="red">
+        *
+      </Typography>
     </Typography>
   );
 
+  const handleSubmit = () => {
+    console.log("Karyawan ID:", karyawanId);
+    // Lakukan sesuatu dengan karyawanId, seperti mengirim data ke API
+  };
+
   return (
     <div>
-      <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", Color: " #2775EC" }}>
+      <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", Color: " #2775EC", textTransform: "none" }}>
         Tambah Kegiatan
       </Button>
       <Modal open={open} onClose={handleClose}>
@@ -42,15 +49,35 @@ export default function ModalForm() {
               x
             </Button>
           </Box>
+          <Box display={"flex"} gap={1}>
+            <Box>
+              <RequiredLabel>Tanggal Mulai</RequiredLabel>
+              <TextField fullWidth size="small" />
+            </Box>
+            <Box>
+              <RequiredLabel>Tanggal Berakhir</RequiredLabel>
+              <TextField fullWidth size="small" />
+            </Box>
+            <Box>
+              <RequiredLabel>Waktu Mulai</RequiredLabel>
+              <TextField fullWidth size="small" />
+            </Box>
+            <Box>
+              <RequiredLabel>Waktu Berakhir</RequiredLabel>
+              <TextField fullWidth size="small" />
+            </Box>
+          </Box>
+
           <Box>
             <RequiredLabel>Judul Kegiatan</RequiredLabel>
             <TextField fullWidth size="small" />
             <RequiredLabel>Nama Proyek</RequiredLabel>
-            <TextField fullWidth size="small" select />
+            <TextField fullWidth size="small" />
           </Box>
+
           <Box display={"flex"} justifyContent={"end"}>
             <Button onClick={handleClose}>Kembali</Button>
-            <Button>Simpan</Button>
+            <Button onClick={handleSubmit}>Simpan</Button>
           </Box>
         </Box>
       </Modal>

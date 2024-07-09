@@ -61,7 +61,7 @@ export default function DaftarKegiatan() {
               <Box display={"flex"} justifyContent={"space-between"}>
                 <Box display={"flex"} padding={3} alignItems={"center"} gap={3}>
                   <Typography fontWeight={"bold"}>Daftar Kegiatan</Typography>
-                  <ModalForm />
+                  <ModalForm karyawanId={item.id} />
                 </Box>
                 <Box alignItems={"center"} padding={3}>
                   <TextField
@@ -74,7 +74,7 @@ export default function DaftarKegiatan() {
                 </Box>
               </Box>
               <Box>
-                <TableData />
+                <TableData karyawanId={item.id} />
               </Box>
               <Box sx={{ marginX: 3, backgroundColor: "#f4f0ec  ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
                 <Box display={"flex"} justifyContent={"space-between"}>
