@@ -89,8 +89,17 @@ export default function TableData() {
     console.log(id);
   };
 
-  const handleDelete = (id) => {
-    console.log(id);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/kegiatan/${id}`);
+      if (response.status === 200) {
+        // Memeriksa status respons
+        setData((prev) => prev.filter((data) => data.id !== id));
+        console.log(`ID yang dihapus: ${id}`);
+      }
+    } catch (err) {
+      console.error("Error saat menghapus data:", err);
+    }
   };
 
   useEffect(() => {
@@ -98,26 +107,24 @@ export default function TableData() {
   }, []);
 
   return (
-    <>
-      <Box sx={{ marginX: 3 }}>
-        <DataGrid
-          rows={transformData(data)}
-          columns={columns}
-          autoHeight
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 3,
-              },
+    <Box sx={{ marginX: 3 }}>
+      <DataGrid
+        rows={transformData(data)}
+        columns={columns}
+        autoHeight
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 3,
             },
-          }}
-          localeText={{
-            noRowsLabel: "Belum Ada Kegiatan",
-          }}
-          pageSizeOptions={[3]}
-          disableRowSelectionOnClick
-        />
-      </Box>
-    </>
+          },
+        }}
+        localeText={{
+          noRowsLabel: "Belum Ada Kegiatan",
+        }}
+        pageSizeOptions={[3]}
+        disableRowSelectionOnClick
+      />
+    </Box>
   );
 }

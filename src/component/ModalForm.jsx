@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -16,7 +16,7 @@ const style = {
 };
 
 export default function ModalForm() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
