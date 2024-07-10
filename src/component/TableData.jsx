@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData({ karyawanId }) {
+export default function TableData({ karyawanId, filteredData }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -113,7 +113,7 @@ export default function TableData({ karyawanId }) {
   return (
     <Box sx={{ marginX: 3 }}>
       <DataGrid
-        rows={processData(data)}
+        rows={filteredData(processData(data))}
         columns={columns}
         autoHeight
         initialState={{

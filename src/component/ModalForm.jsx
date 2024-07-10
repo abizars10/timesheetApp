@@ -2,6 +2,7 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -16,9 +17,33 @@ const style = {
 };
 
 export default function ModalForm({ karyawanId }) {
+  const initialKegiatan = {
+    judul: "",
+    proyek: "",
+    tgl_mulai: "",
+    tgl_berakhir: "",
+    waktu_mulai: "",
+    waktu_berakhir: "",
+    durasi: "",
+    id_karyawan: karyawanId,
+  };
+
   const [open, setOpen] = useState(false);
+  const [addKegiatan, setAddKegiatan] = useState(initialKegiatan);
+
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setAddKegiatan(initialKegiatan);
+  };
+
+  const handleChangeKegiatan = (e) => {
+    const { name, value } = e.target;
+    setAddKegiatan((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const RequiredLabel = ({ children }) => (
     <Typography display="flex">
@@ -29,14 +54,20 @@ export default function ModalForm({ karyawanId }) {
     </Typography>
   );
 
-  const handleSubmit = () => {
-    console.log("Karyawan ID:", karyawanId);
-    // Lakukan sesuatu dengan karyawanId, seperti mengirim data ke API
+  const handleSubmit = async () => {
+    try {
+      await axios.post("http://localhost:3000/kegiatan", addKegiatan);
+      console.log(`Karyawan ID:${karyawanId}`, addKegiatan);
+      setAddKegiatan(initialKegiatan);
+      handleClose();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
     <div>
-      <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", Color: " #2775EC", textTransform: "none" }}>
+      <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
         Tambah Kegiatan
       </Button>
       <Modal open={open} onClose={handleClose}>
@@ -52,27 +83,27 @@ export default function ModalForm({ karyawanId }) {
           <Box display={"flex"} gap={1}>
             <Box>
               <RequiredLabel>Tanggal Mulai</RequiredLabel>
-              <TextField fullWidth size="small" />
+              <TextField fullWidth size="small" value={addKegiatan.tgl_mulai} onChange={handleChangeKegiatan} name="tgl_mulai" />
             </Box>
             <Box>
               <RequiredLabel>Tanggal Berakhir</RequiredLabel>
-              <TextField fullWidth size="small" />
+              <TextField fullWidth size="small" value={addKegiatan.tgl_berakhir} onChange={handleChangeKegiatan} name="tgl_berakhir" />
             </Box>
             <Box>
               <RequiredLabel>Waktu Mulai</RequiredLabel>
-              <TextField fullWidth size="small" />
+              <TextField fullWidth size="small" value={addKegiatan.waktu_mulai} onChange={handleChangeKegiatan} name="waktu_mulai" />
             </Box>
             <Box>
               <RequiredLabel>Waktu Berakhir</RequiredLabel>
-              <TextField fullWidth size="small" />
+              <TextField fullWidth size="small" value={addKegiatan.waktu_berakhir} onChange={handleChangeKegiatan} name="waktu_berakhir" />
             </Box>
           </Box>
 
           <Box>
             <RequiredLabel>Judul Kegiatan</RequiredLabel>
-            <TextField fullWidth size="small" />
+            <TextField fullWidth size="small" value={addKegiatan.judul} onChange={handleChangeKegiatan} name="judul" />
             <RequiredLabel>Nama Proyek</RequiredLabel>
-            <TextField fullWidth size="small" />
+            <TextField fullWidth size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek" />
           </Box>
 
           <Box display={"flex"} justifyContent={"end"}>

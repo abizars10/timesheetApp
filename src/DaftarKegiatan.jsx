@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function DaftarKegiatan() {
   const [dataKaryawan, setDataKaryawan] = useState([]);
+  const [filterData, setFilterData] = useState("");
 
   const fetchDataKaryawan = async () => {
     try {
@@ -31,6 +32,19 @@ export default function DaftarKegiatan() {
     }
   };
 
+  const filterKegiatan = (kegiatan) => {
+    return kegiatan.filter(
+      (item) =>
+        item.proyek.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.judul.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.tgl_mulai.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.tgl_berakhir.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.waktu_mulai.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.waktu_berakhir.toLowerCase().includes(filterData.toLowerCase()) ||
+        item.durasi.toLowerCase().includes(filterData.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     fetchDataKaryawan();
   }, []);
@@ -49,7 +63,7 @@ export default function DaftarKegiatan() {
                   </Box>
                   <Box>
                     <Typography>Rate</Typography>
-                    <Typography>{item.rate}</Typography>
+                    <Typography>Rp{item.rate}/Jam</Typography>
                   </Box>
                 </Box>
                 <Box>
@@ -67,6 +81,8 @@ export default function DaftarKegiatan() {
                   <TextField
                     size="small"
                     placeholder="Cari"
+                    value={filterData}
+                    onChange={(e) => setFilterData(e.target.value)}
                     InputProps={{
                       startAdornment: <SearchIcon sx={{ color: "#d3d3d3" }} />,
                     }}
@@ -74,7 +90,7 @@ export default function DaftarKegiatan() {
                 </Box>
               </Box>
               <Box>
-                <TableData karyawanId={item.id} />
+                <TableData karyawanId={item.id} filteredData={filterKegiatan} />
               </Box>
               <Box sx={{ marginX: 3, backgroundColor: "#f4f0ec  ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
                 <Box display={"flex"} justifyContent={"space-between"}>
