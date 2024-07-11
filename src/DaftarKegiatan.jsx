@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ModalFilter from "./component/ModalFilter";
 
 export default function DaftarKegiatan() {
   const [dataKaryawan, setDataKaryawan] = useState([]);
@@ -77,7 +78,7 @@ export default function DaftarKegiatan() {
                   <Typography fontWeight={"bold"}>Daftar Kegiatan</Typography>
                   <ModalForm karyawanId={item.id} />
                 </Box>
-                <Box alignItems={"center"} padding={3}>
+                <Box alignItems={"center"} padding={3} display={"flex"} gap={1}>
                   <TextField
                     size="small"
                     placeholder="Cari"
@@ -87,12 +88,13 @@ export default function DaftarKegiatan() {
                       startAdornment: <SearchIcon sx={{ color: "#d3d3d3" }} />,
                     }}
                   />
+                  <ModalFilter />
                 </Box>
               </Box>
               <Box>
                 <TableData karyawanId={item.id} filteredData={filterKegiatan} />
               </Box>
-              <Box sx={{ marginX: 3, backgroundColor: "#f4f0ec  ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
+              <Box sx={{ marginX: 3, backgroundColor: "#f5f5f5 ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
                 <Box display={"flex"} justifyContent={"space-between"}>
                   <Typography color={"#2775EC"}>Total Durasi</Typography>
                   <Typography color={"#2775EC"}>10Jam 30Menit</Typography>
