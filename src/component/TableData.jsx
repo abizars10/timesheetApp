@@ -35,47 +35,47 @@ export default function TableData({ karyawanId, filteredData }) {
   };
 
   const columns = [
-    { field: "judul", headerName: "Judul Kegiatan", width: 210 },
+    { field: "judul", headerName: "Judul Kegiatan", width: 320 },
     {
       field: "proyek",
       headerName: "Nama Proyek",
-      width: 200,
+      width: 150,
       editable: true,
     },
     {
       field: "tgl_mulai",
       headerName: "Tanggal Mulai",
-      width: 125,
+      width: 120,
       editable: true,
     },
     {
       field: "tgl_berakhir",
       headerName: "Tanggal Berakhir",
-      width: 125,
+      width: 120,
       editable: true,
     },
     {
       field: "waktu_mulai",
       headerName: "Waktu Mulai",
-      width: 125,
+      width: 120,
       editable: true,
     },
     {
       field: "waktu_berakhir",
       headerName: "Waktu Berakhir",
-      width: 125,
+      width: 120,
       editable: true,
     },
     {
       field: "durasi",
       headerName: "Durasi",
-      width: 150,
+      width: 120,
       editable: true,
     },
     {
       field: "aksi",
       headerName: "Aksi",
-      width: 100,
+      width: 80,
       renderCell: (params) => (
         <Box>
           <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>

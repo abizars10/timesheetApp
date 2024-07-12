@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import ModalAddProyek from "./ModalAddProyek";
 
 const style = {
   position: "absolute",
@@ -30,6 +31,16 @@ export default function ModalForm({ karyawanId }) {
 
   const [open, setOpen] = useState(false);
   const [addKegiatan, setAddKegiatan] = useState(initialKegiatan);
+  const [dataProyek, setDataProyek] = useState();
+
+  const fetchDataProyek = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/proyek");
+      setDataProyek(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -48,7 +59,7 @@ export default function ModalForm({ karyawanId }) {
   const RequiredLabel = ({ children }) => (
     <Typography display="flex">
       {children}
-      <Typography component={"span"} color="red">
+      <Typography component={"span"} color="#F15858">
         *
       </Typography>
     </Typography>
@@ -65,6 +76,9 @@ export default function ModalForm({ karyawanId }) {
     }
   };
 
+  useEffect(() => {
+    fetchDataProyek();
+  }, []);
   return (
     <div>
       <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
@@ -103,12 +117,21 @@ export default function ModalForm({ karyawanId }) {
             <RequiredLabel>Judul Kegiatan</RequiredLabel>
             <TextField fullWidth size="small" value={addKegiatan.judul} onChange={handleChangeKegiatan} name="judul" />
             <RequiredLabel>Nama Proyek</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek" />
+            <TextField fullWidth select size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek">
+              <ModalAddProyek />
+              {dataProyek?.map((item) => (
+                <MenuItem key={item.id} value={item.nama_proyek}>
+                  {item.nama_proyek}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
 
-          <Box display={"flex"} justifyContent={"end"}>
+          <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
             <Button onClick={handleClose}>Kembali</Button>
-            <Button onClick={handleSubmit}>Simpan</Button>
+            <Button variant="contained" onClick={handleSubmit}>
+              Simpan
+            </Button>
           </Box>
         </Box>
       </Modal>
