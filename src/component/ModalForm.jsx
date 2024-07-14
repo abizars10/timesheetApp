@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, MenuItem, Modal, TextField, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Box, Button, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ModalAddProyek from "./ModalAddProyek";
@@ -17,7 +16,7 @@ const style = {
   p: 2,
 };
 
-export default function ModalForm({ karyawanId }) {
+export default function ModalForm({ open, onClose, karyawanId }) {
   const initialKegiatan = {
     judul: "",
     proyek: "",
@@ -29,9 +28,9 @@ export default function ModalForm({ karyawanId }) {
     id_karyawan: karyawanId,
   };
 
-  const [open, setOpen] = useState(false);
   const [addKegiatan, setAddKegiatan] = useState(initialKegiatan);
-  const [dataProyek, setDataProyek] = useState();
+  const [dataProyek, setDataProyek] = useState([]);
+  const [openAddProyek, setOpenAddProyek] = useState(false);
 
   const fetchDataProyek = async () => {
     try {
@@ -42,18 +41,25 @@ export default function ModalForm({ karyawanId }) {
     }
   };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    setAddKegiatan(initialKegiatan);
-  };
-
   const handleChangeKegiatan = (e) => {
     const { name, value } = e.target;
     setAddKegiatan((prev) => ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleClose = () => {
+    setAddKegiatan(initialKegiatan);
+    onClose();
+  };
+
+  const handleOpenAddProyek = () => setOpenAddProyek(true);
+  const handleCloseAddProyek = () => setOpenAddProyek(false);
+
+  const handleAddProyek = () => {
+    fetchDataProyek();
+    handleCloseAddProyek();
   };
 
   const RequiredLabel = ({ children }) => (
@@ -70,7 +76,7 @@ export default function ModalForm({ karyawanId }) {
       await axios.post("http://localhost:3000/kegiatan", addKegiatan);
       console.log(`Karyawan ID:${karyawanId}`, addKegiatan);
       setAddKegiatan(initialKegiatan);
-      handleClose();
+      onClose();
     } catch (err) {
       console.error(err);
     }
@@ -79,62 +85,61 @@ export default function ModalForm({ karyawanId }) {
   useEffect(() => {
     fetchDataProyek();
   }, []);
+
   return (
-    <div>
-      <Button onClick={handleOpen} variant="outlined" size="small" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#F0F6FF", color: "#2775EC", textTransform: "none" }}>
-        Tambah Kegiatan
-      </Button>
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography alignContent={"center"} fontWeight={"bold"}>
-              Tambah Kegiatan
-            </Typography>
-            <Button onClick={handleClose} sx={{ color: "black", fontWeight: "bold", marginRight: -2 }}>
-              x
-            </Button>
-          </Box>
-          <Box display={"flex"} gap={1}>
-            <Box>
-              <RequiredLabel>Tanggal Mulai</RequiredLabel>
-              <TextField fullWidth size="small" value={addKegiatan.tgl_mulai} onChange={handleChangeKegiatan} name="tgl_mulai" />
-            </Box>
-            <Box>
-              <RequiredLabel>Tanggal Berakhir</RequiredLabel>
-              <TextField fullWidth size="small" value={addKegiatan.tgl_berakhir} onChange={handleChangeKegiatan} name="tgl_berakhir" />
-            </Box>
-            <Box>
-              <RequiredLabel>Waktu Mulai</RequiredLabel>
-              <TextField fullWidth size="small" value={addKegiatan.waktu_mulai} onChange={handleChangeKegiatan} name="waktu_mulai" />
-            </Box>
-            <Box>
-              <RequiredLabel>Waktu Berakhir</RequiredLabel>
-              <TextField fullWidth size="small" value={addKegiatan.waktu_berakhir} onChange={handleChangeKegiatan} name="waktu_berakhir" />
-            </Box>
-          </Box>
-
+    <Modal open={open} onClose={onClose}>
+      <Box sx={style}>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Typography alignContent={"center"} fontWeight={"bold"}>
+            Tambah Kegiatan
+          </Typography>
+          <Button onClick={onClose} sx={{ color: "black", fontWeight: "bold", marginRight: -2 }}>
+            x
+          </Button>
+        </Box>
+        <Box display={"flex"} gap={1}>
           <Box>
-            <RequiredLabel>Judul Kegiatan</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.judul} onChange={handleChangeKegiatan} name="judul" />
-            <RequiredLabel>Nama Proyek</RequiredLabel>
-            <TextField fullWidth select size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek">
-              <ModalAddProyek />
-              {dataProyek?.map((item) => (
-                <MenuItem key={item.id} value={item.nama_proyek}>
-                  {item.nama_proyek}
-                </MenuItem>
-              ))}
-            </TextField>
+            <RequiredLabel>Tanggal Mulai</RequiredLabel>
+            <TextField fullWidth size="small" value={addKegiatan.tgl_mulai} onChange={handleChangeKegiatan} name="tgl_mulai" />
           </Box>
-
-          <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
-            <Button onClick={handleClose}>Kembali</Button>
-            <Button variant="contained" onClick={handleSubmit}>
-              Simpan
-            </Button>
+          <Box>
+            <RequiredLabel>Tanggal Berakhir</RequiredLabel>
+            <TextField fullWidth size="small" value={addKegiatan.tgl_berakhir} onChange={handleChangeKegiatan} name="tgl_berakhir" />
+          </Box>
+          <Box>
+            <RequiredLabel>Waktu Mulai</RequiredLabel>
+            <TextField fullWidth size="small" value={addKegiatan.waktu_mulai} onChange={handleChangeKegiatan} name="waktu_mulai" />
+          </Box>
+          <Box>
+            <RequiredLabel>Waktu Berakhir</RequiredLabel>
+            <TextField fullWidth size="small" value={addKegiatan.waktu_berakhir} onChange={handleChangeKegiatan} name="waktu_berakhir" />
           </Box>
         </Box>
-      </Modal>
-    </div>
+
+        <Box>
+          <RequiredLabel>Judul Kegiatan</RequiredLabel>
+          <TextField fullWidth size="small" value={addKegiatan.judul} onChange={handleChangeKegiatan} name="judul" />
+          <RequiredLabel>Nama Proyek</RequiredLabel>
+          <Select fullWidth size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek">
+            <MenuItem onClick={handleOpenAddProyek} sx={{ color: "#F15858" }}>
+              + Tambah Proyek
+            </MenuItem>
+            {dataProyek.map((item) => (
+              <MenuItem key={item.id} value={item.nama_proyek}>
+                {item.nama_proyek}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+
+        <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
+          <Button onClick={handleClose}>Kembali</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Simpan
+          </Button>
+        </Box>
+        <ModalAddProyek open={openAddProyek} onClose={handleCloseAddProyek} handleAddProyek={handleAddProyek} />
+      </Box>
+    </Modal>
   );
 }

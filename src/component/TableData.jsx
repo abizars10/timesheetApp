@@ -35,7 +35,7 @@ export default function TableData({ karyawanId, filteredData }) {
   };
 
   const columns = [
-    { field: "judul", headerName: "Judul Kegiatan", width: 320 },
+    { field: "judul", headerName: "Judul Kegiatan", width: 250 },
     {
       field: "proyek",
       headerName: "Nama Proyek",
@@ -45,7 +45,7 @@ export default function TableData({ karyawanId, filteredData }) {
     {
       field: "tgl_mulai",
       headerName: "Tanggal Mulai",
-      width: 120,
+      width: 110,
       editable: true,
     },
     {
@@ -57,13 +57,13 @@ export default function TableData({ karyawanId, filteredData }) {
     {
       field: "waktu_mulai",
       headerName: "Waktu Mulai",
-      width: 120,
+      width: 110,
       editable: true,
     },
     {
       field: "waktu_berakhir",
       headerName: "Waktu Berakhir",
-      width: 120,
+      width: 110,
       editable: true,
     },
     {
@@ -78,10 +78,10 @@ export default function TableData({ karyawanId, filteredData }) {
       width: 80,
       renderCell: (params) => (
         <Box>
-          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
+          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
             <EditIcon fontSize={"small"} />
           </IconButton>
-          <IconButton sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
+          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
             <DeleteIcon fontSize={"small"} />
           </IconButton>
         </Box>
