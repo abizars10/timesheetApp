@@ -164,19 +164,39 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
         <Box display={"flex"} gap={1}>
           <Box>
             <RequiredLabel>Tanggal Mulai</RequiredLabel>
-            <DatePicker selected={startDate} onChange={(date) => handleChangeKegiatan("tgl_mulai", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
+            <DatePicker className="custom-date-picker-input " selected={startDate} onChange={(date) => handleChangeKegiatan("tgl_mulai", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
           </Box>
           <Box>
             <RequiredLabel>Tanggal Berakhir</RequiredLabel>
-            <DatePicker selected={endDate} onChange={(date) => handleChangeKegiatan("tgl_berakhir", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
+            <DatePicker className="custom-date-picker-input " selected={endDate} onChange={(date) => handleChangeKegiatan("tgl_berakhir", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
           </Box>
           <Box>
             <RequiredLabel>Waktu Mulai</RequiredLabel>
-            <DatePicker selected={startTime} onChange={(time) => handleChangeKegiatan("waktu_mulai", time)} showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat={"HH:mm"} timeFormat="HH:mm" placeholderText="Pilih Waktu" />
+            <DatePicker
+              className="custom-date-picker-input "
+              selected={startTime}
+              onChange={(time) => handleChangeKegiatan("waktu_mulai", time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={30}
+              dateFormat={"HH:mm"}
+              timeFormat="HH:mm"
+              placeholderText="Pilih Waktu"
+            />
           </Box>
           <Box>
             <RequiredLabel>Waktu Berakhir</RequiredLabel>
-            <DatePicker selected={endTime} onChange={(time) => handleChangeKegiatan("waktu_berakhir", time)} showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat={"HH:mm"} timeFormat="HH:mm" placeholderText="Pilih Waktu" />
+            <DatePicker
+              className="custom-date-picker-input "
+              selected={endTime}
+              onChange={(time) => handleChangeKegiatan("waktu_berakhir", time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={30}
+              dateFormat={"HH:mm"}
+              timeFormat="HH:mm"
+              placeholderText="Pilih Waktu"
+            />
           </Box>
         </Box>
 
