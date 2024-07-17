@@ -16,7 +16,7 @@ const style = {
   p: 2,
 };
 
-export default function ModalForm({ open, onClose, karyawanId }) {
+export default function ModalForm({ open, onClose, karyawanId, handleKegiatan }) {
   const initialKegiatan = {
     judul: "",
     proyek: "",
@@ -74,9 +74,9 @@ export default function ModalForm({ open, onClose, karyawanId }) {
   const handleSubmit = async () => {
     try {
       await axios.post("http://localhost:3000/kegiatan", addKegiatan);
-      console.log(`Karyawan ID:${karyawanId}`, addKegiatan);
       setAddKegiatan(initialKegiatan);
       onClose();
+      handleKegiatan();
     } catch (err) {
       console.error(err);
     }

@@ -30,7 +30,6 @@ export default function ModalAddProyek({ open, onClose, handleAddProyek }) {
   const handleSubmit = async () => {
     try {
       await axios.post("http://localhost:3000/proyek", addProyek);
-      // console.log(addProyek);
       handleAddProyek();
     } catch (err) {
       console.error(err);

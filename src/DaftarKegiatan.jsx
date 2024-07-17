@@ -14,6 +14,10 @@ export default function DaftarKegiatan() {
   const [dataKaryawan, setDataKaryawan] = useState([]);
   const [filterData, setFilterData] = useState("");
 
+  const handleKegiatan = () => {
+    fetchDataKaryawan();
+  };
+
   const handleOpen = (id) => {
     setSelectedKaryawanId(id);
     setOpen(true);
@@ -120,7 +124,8 @@ export default function DaftarKegiatan() {
             </Box>
           </Box>
         ))}
-      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} />}
+      {/* Modal Form Data Kegiatan */}
+      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} handleKegiatan={handleKegiatan} />}
     </Box>
   );
 }

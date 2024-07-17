@@ -97,7 +97,6 @@ export default function TableData({ karyawanId, filteredData }) {
     try {
       const response = await axios.delete(`http://localhost:3000/kegiatan/${id}`);
       if (response.status === 200) {
-        // Memeriksa status respons
         setData((prev) => prev.filter((data) => data.id !== id));
         console.log(`ID yang dihapus: ${id}`);
       }
