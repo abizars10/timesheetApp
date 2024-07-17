@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { Box, Button, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ModalAddProyek from "./ModalAddProyek";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from "dayjs";
 
 const style = {
   position: "absolute",
@@ -31,6 +35,10 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
   const [addKegiatan, setAddKegiatan] = useState(initialKegiatan);
   const [dataProyek, setDataProyek] = useState([]);
   const [openAddProyek, setOpenAddProyek] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
 
   const fetchDataProyek = async () => {
     try {
@@ -41,12 +49,71 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
     }
   };
 
-  const handleChangeKegiatan = (e) => {
-    const { name, value } = e.target;
-    setAddKegiatan((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleChangeKegiatan = (name, value) => {
+    if (name === "tgl_mulai") {
+      setStartDate(value);
+      setAddKegiatan((prev) => ({
+        ...prev,
+        tgl_mulai: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+      }));
+    } else if (name === "tgl_berakhir") {
+      setEndDate(value);
+      setAddKegiatan((prev) => ({
+        ...prev,
+        tgl_berakhir: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+      }));
+    } else if (name === "waktu_mulai") {
+      setStartTime(value);
+      setAddKegiatan((prev) => ({
+        ...prev,
+        waktu_mulai: dayjs(value, "HH:mm").format("HH:mm"),
+      }));
+    } else if (name === "waktu_berakhir") {
+      setEndTime(value);
+      setAddKegiatan((prev) => ({
+        ...prev,
+        waktu_berakhir: dayjs(value, "HH:mm").format("HH:mm"),
+      }));
+    } else {
+      setAddKegiatan((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleAddKegiatan = async () => {
+    const { tgl_mulai, waktu_mulai, tgl_berakhir, waktu_berakhir } = addKegiatan;
+    if (!tgl_mulai || !waktu_mulai || !tgl_berakhir || !waktu_berakhir) {
+      console.error("Tanggal atau waktu tidak boleh kosong");
+      return;
+    }
+
+    const waktuMulai = dayjs(`${tgl_mulai} ${waktu_mulai}`, "DD MMM YYYY HH:mm");
+    const waktuSelesai = dayjs(`${tgl_berakhir} ${waktu_berakhir}`, "DD MMM YYYY HH:mm");
+
+    if (!waktuMulai.isValid() || !waktuSelesai.isValid()) {
+      console.error("Format tanggal tidak valid");
+      return;
+    }
+
+    const durasiMenit = waktuSelesai.diff(waktuMulai, "minute");
+    const durasiJam = Math.floor(durasiMenit / 60);
+    const durasiSisaMenit = durasiMenit % 60;
+    const durasi = durasiJam === 0 ? `${durasiSisaMenit} menit` : durasiSisaMenit === 0 ? `${durasiJam} jam` : `${durasiJam} jam ${durasiSisaMenit} menit`;
+
+    const params = {
+      ...addKegiatan,
+      durasi: durasi,
+    };
+    try {
+      await axios.post("http://localhost:3000/kegiatan", params);
+      setAddKegiatan(initialKegiatan);
+      onClose();
+      handleKegiatan();
+    } catch (err) {
+      console.error("Error menambahkan kegiatan:", err);
+    }
   };
 
   const handleClose = () => {
@@ -71,20 +138,17 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
     </Typography>
   );
 
-  const handleSubmit = async () => {
-    try {
-      await axios.post("http://localhost:3000/kegiatan", addKegiatan);
-      setAddKegiatan(initialKegiatan);
-      onClose();
-      handleKegiatan();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
-    fetchDataProyek();
-  }, []);
+    if (open) {
+      fetchDataProyek();
+    } else {
+      setAddKegiatan(initialKegiatan);
+      setStartDate(null);
+      setEndDate(null);
+      setStartTime(null);
+      setEndTime(null);
+    }
+  }, [open]);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -100,27 +164,27 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
         <Box display={"flex"} gap={1}>
           <Box>
             <RequiredLabel>Tanggal Mulai</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.tgl_mulai} onChange={handleChangeKegiatan} name="tgl_mulai" />
+            <DatePicker selected={startDate} onChange={(date) => handleChangeKegiatan("tgl_mulai", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
           </Box>
           <Box>
             <RequiredLabel>Tanggal Berakhir</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.tgl_berakhir} onChange={handleChangeKegiatan} name="tgl_berakhir" />
+            <DatePicker selected={endDate} onChange={(date) => handleChangeKegiatan("tgl_berakhir", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
           </Box>
           <Box>
             <RequiredLabel>Waktu Mulai</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.waktu_mulai} onChange={handleChangeKegiatan} name="waktu_mulai" />
+            <DatePicker selected={startTime} onChange={(time) => handleChangeKegiatan("waktu_mulai", time)} showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat={"HH:mm"} timeFormat="HH:mm" placeholderText="Pilih Waktu" />
           </Box>
           <Box>
             <RequiredLabel>Waktu Berakhir</RequiredLabel>
-            <TextField fullWidth size="small" value={addKegiatan.waktu_berakhir} onChange={handleChangeKegiatan} name="waktu_berakhir" />
+            <DatePicker selected={endTime} onChange={(time) => handleChangeKegiatan("waktu_berakhir", time)} showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat={"HH:mm"} timeFormat="HH:mm" placeholderText="Pilih Waktu" />
           </Box>
         </Box>
 
         <Box>
           <RequiredLabel>Judul Kegiatan</RequiredLabel>
-          <TextField fullWidth size="small" value={addKegiatan.judul} onChange={handleChangeKegiatan} name="judul" />
+          <TextField fullWidth size="small" value={addKegiatan.judul} onChange={(e) => handleChangeKegiatan("judul", e.target.value)} name="judul" />
           <RequiredLabel>Nama Proyek</RequiredLabel>
-          <Select fullWidth size="small" value={addKegiatan.proyek} onChange={handleChangeKegiatan} name="proyek">
+          <Select fullWidth size="small" value={addKegiatan.proyek} onChange={(e) => handleChangeKegiatan("proyek", e.target.value)} name="proyek">
             <MenuItem onClick={handleOpenAddProyek} sx={{ color: "#F15858" }}>
               + Tambah Proyek
             </MenuItem>
@@ -134,7 +198,7 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
 
         <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
           <Button onClick={handleClose}>Kembali</Button>
-          <Button variant="contained" onClick={handleSubmit}>
+          <Button variant="contained" onClick={handleAddKegiatan}>
             Simpan
           </Button>
         </Box>

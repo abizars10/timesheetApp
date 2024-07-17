@@ -14,10 +14,6 @@ export default function DaftarKegiatan() {
   const [dataKaryawan, setDataKaryawan] = useState([]);
   const [filterData, setFilterData] = useState("");
 
-  const handleKegiatan = () => {
-    fetchDataKaryawan();
-  };
-
   const handleOpen = (id) => {
     setSelectedKaryawanId(id);
     setOpen(true);
@@ -32,6 +28,10 @@ export default function DaftarKegiatan() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleKegiatan = () => {
+    fetchDataKaryawan();
   };
 
   const handleDelete = async (id) => {
