@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData({ karyawanId, filteredData }) {
+export default function TableData({ karyawanId, filteredData, rate }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -32,6 +32,46 @@ export default function TableData({ karyawanId, filteredData }) {
         durasi: item.durasi,
         id_karyawan: item.id_karyawan,
       }));
+  };
+
+  const calculateTotalDurasi = (data) => {
+    let totalMenit = 0;
+
+    data.forEach((item) => {
+      const durasi = item.durasi.split(" ");
+      let menit = 0;
+
+      for (let i = 0; i < durasi.length; i++) {
+        if (durasi[i] === "jam") {
+          menit += parseInt(durasi[i - 1]) * 60;
+        } else if (durasi[i] === "menit") {
+          menit += parseInt(durasi[i - 1]);
+        }
+      }
+
+      totalMenit += menit;
+    });
+
+    const totalJam = Math.floor(totalMenit / 60);
+    const sisaMenit = totalMenit % 60;
+
+    return !totalJam && !sisaMenit ? `-` : totalJam === 0 ? `${sisaMenit} menit` : sisaMenit === 0 ? `${totalJam} jam` : `${totalJam} jam ${sisaMenit} menit`;
+  };
+
+  const calculateTotalPendapatan = (totalDurasi, rate) => {
+    const durasi = totalDurasi.split(" ");
+    let totalMenit = 0;
+
+    for (let i = 0; i < durasi.length; i++) {
+      if (durasi[i] === "jam") {
+        totalMenit += parseInt(durasi[i - 1]) * 60;
+      } else if (durasi[i] === "menit") {
+        totalMenit += parseInt(durasi[i - 1]);
+      }
+    }
+
+    const totalJam = totalMenit / 60;
+    return totalJam !== 0 ? "Rp" + totalJam * rate : "-";
   };
 
   const columns = [
@@ -98,7 +138,6 @@ export default function TableData({ karyawanId, filteredData }) {
       const response = await axios.delete(`http://localhost:3000/kegiatan/${id}`);
       if (response.status === 200) {
         setData((prev) => prev.filter((data) => data.id !== id));
-        console.log(`ID yang dihapus: ${id}`);
       }
     } catch (err) {
       console.error("Error saat menghapus data:", err);
@@ -109,10 +148,14 @@ export default function TableData({ karyawanId, filteredData }) {
     fetchData();
   }, []);
 
+  const filteredKegiatan = processData(data);
+  const totalDurasi = calculateTotalDurasi(filteredKegiatan);
+  const totalPendapatan = calculateTotalPendapatan(totalDurasi, rate);
+
   return (
     <Box sx={{ marginX: 3 }}>
       <DataGrid
-        rows={filteredData(processData(data))}
+        rows={filteredData(filteredKegiatan)}
         columns={columns}
         autoHeight
         initialState={{
@@ -128,6 +171,20 @@ export default function TableData({ karyawanId, filteredData }) {
         pageSizeOptions={[3]}
         disableRowSelectionOnClick
       />
+      <Box sx={{ backgroundColor: "#f5f5f5 ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Typography color={"#2775EC"}>Total Durasi</Typography>
+          <Typography color={"#2775EC"}>{totalDurasi}</Typography>
+        </Box>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Typography fontWeight={"bold"} color={"#2775EC"}>
+            Total Pendapatan
+          </Typography>
+          <Typography fontWeight={"bold"} color={"#2775EC"}>
+            {totalPendapatan}
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   );
 }

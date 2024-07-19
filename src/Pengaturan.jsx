@@ -49,7 +49,6 @@ export default function Pengaturan() {
       try {
         await axios.post("http://localhost:3000/karyawan", addEmployee);
         setAddEmployee(addEmployee);
-        console.log(addEmployee);
         navigate("/");
         setAddEmployee(initialState);
       } catch (err) {

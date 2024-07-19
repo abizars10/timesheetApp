@@ -30,10 +30,6 @@ export default function DaftarKegiatan() {
     }
   };
 
-  const handleKegiatan = () => {
-    fetchDataKaryawan();
-  };
-
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`http://localhost:3000/karyawan/${id}`);
@@ -106,26 +102,12 @@ export default function DaftarKegiatan() {
               </Box>
             </Box>
             <Box>
-              <TableData karyawanId={item.id} filteredData={filterKegiatan} />
-            </Box>
-            <Box sx={{ marginX: 3, backgroundColor: "#f5f5f5 ", padding: 1.5, borderRadius: "0 0 10px 10px" }}>
-              <Box display={"flex"} justifyContent={"space-between"}>
-                <Typography color={"#2775EC"}>Total Durasi</Typography>
-                <Typography color={"#2775EC"}>10Jam 30Menit</Typography>
-              </Box>
-              <Box display={"flex"} justifyContent={"space-between"}>
-                <Typography fontWeight={"bold"} color={"#2775EC"}>
-                  Total Pendapatan
-                </Typography>
-                <Typography fontWeight={"bold"} color={"#2775EC"}>
-                  Rp502500
-                </Typography>
-              </Box>
+              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} />
             </Box>
           </Box>
         ))}
       {/* Modal Form Data Kegiatan */}
-      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} handleKegiatan={handleKegiatan} />}
+      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} />}
     </Box>
   );
 }

@@ -20,7 +20,7 @@ const style = {
   p: 2,
 };
 
-export default function ModalForm({ open, onClose, karyawanId, handleKegiatan }) {
+export default function ModalForm({ open, onClose, karyawanId }) {
   const initialKegiatan = {
     judul: "",
     proyek: "",
@@ -110,7 +110,6 @@ export default function ModalForm({ open, onClose, karyawanId, handleKegiatan })
       await axios.post("http://localhost:3000/kegiatan", params);
       setAddKegiatan(initialKegiatan);
       onClose();
-      handleKegiatan();
     } catch (err) {
       console.error("Error menambahkan kegiatan:", err);
     }
