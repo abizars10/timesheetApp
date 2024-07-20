@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData({ karyawanId, filteredData, rate }) {
+export default function TableData({ karyawanId, filteredData, rate, open }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -71,7 +71,9 @@ export default function TableData({ karyawanId, filteredData, rate }) {
     }
 
     const totalJam = totalMenit / 60;
-    return totalJam !== 0 ? "Rp" + totalJam * rate : "-";
+    const totalPendapatan = totalJam * rate;
+
+    return totalPendapatan ? `Rp${totalPendapatan.toLocaleString("id-ID")}` : `-`;
   };
 
   const columns = [
@@ -118,7 +120,7 @@ export default function TableData({ karyawanId, filteredData, rate }) {
       width: 80,
       renderCell: (params) => (
         <Box>
-          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => handleEdit(params.row.id)}>
+          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => open(params.row)}>
             <EditIcon fontSize={"small"} />
           </IconButton>
           <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
@@ -129,9 +131,9 @@ export default function TableData({ karyawanId, filteredData, rate }) {
     },
   ];
 
-  const handleEdit = (id) => {
-    console.log(id);
-  };
+  // const handleEdit = (id) => {
+  //   console.log(id);
+  // };
 
   const handleDelete = async (id) => {
     try {

@@ -17,6 +17,7 @@ export default function DaftarKegiatan() {
   const handleOpen = (id) => {
     setSelectedKaryawanId(id);
     setOpen(true);
+    console.log(id);
   };
 
   const handleClose = () => setOpen(false);
@@ -72,7 +73,7 @@ export default function DaftarKegiatan() {
                 </Box>
                 <Box>
                   <Typography>Rate</Typography>
-                  <Typography>Rp{item.rate}/Jam</Typography>
+                  <Typography>Rp{parseFloat(item.rate).toLocaleString("id-ID")}/Jam</Typography>
                 </Box>
               </Box>
               <Box>
@@ -102,7 +103,7 @@ export default function DaftarKegiatan() {
               </Box>
             </Box>
             <Box>
-              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} />
+              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} open={handleOpen} />
             </Box>
           </Box>
         ))}
