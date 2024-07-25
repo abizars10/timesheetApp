@@ -148,7 +148,7 @@ export default function TableData({ karyawanId, filteredData, rate, open }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [data]);
 
   const filteredKegiatan = processData(data);
   const totalDurasi = calculateTotalDurasi(filteredKegiatan);
