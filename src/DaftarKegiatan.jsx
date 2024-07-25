@@ -13,6 +13,11 @@ export default function DaftarKegiatan() {
   const [selectedKaryawanId, setSelectedKaryawanId] = useState(null);
   const [dataKaryawan, setDataKaryawan] = useState([]);
   const [filterData, setFilterData] = useState("");
+  const [trigger, setTrigger] = useState(false);
+
+  const handleTrigger = () => {
+    setTrigger(true);
+  };
 
   const handleOpen = (id) => {
     setSelectedKaryawanId(id);
@@ -58,7 +63,11 @@ export default function DaftarKegiatan() {
 
   useEffect(() => {
     fetchDataKaryawan();
-  }, []);
+    if (trigger) {
+      fetchDataKaryawan();
+      setTrigger(false);
+    }
+  }, [trigger]);
 
   return (
     <Box>
@@ -103,12 +112,12 @@ export default function DaftarKegiatan() {
               </Box>
             </Box>
             <Box>
-              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} open={handleOpen} />
+              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} open={handleOpen} onTrigger={handleTrigger} />
             </Box>
           </Box>
         ))}
       {/* Modal Form Data Kegiatan */}
-      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} />}
+      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} onTrigger={handleTrigger} />}
     </Box>
   );
 }

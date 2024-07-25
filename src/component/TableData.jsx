@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData({ karyawanId, filteredData, rate, open }) {
+export default function TableData({ karyawanId, filteredData, rate, open, onTrigger }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -148,7 +148,13 @@ export default function TableData({ karyawanId, filteredData, rate, open }) {
 
   useEffect(() => {
     fetchData();
-  }, [data]);
+  }, []);
+
+  useEffect(() => {
+    if (onTrigger) {
+      fetchData();
+    }
+  }, [onTrigger]);
 
   const filteredKegiatan = processData(data);
   const totalDurasi = calculateTotalDurasi(filteredKegiatan);
