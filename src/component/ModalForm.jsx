@@ -20,7 +20,7 @@ const style = {
   p: 2,
 };
 
-export default function ModalForm({ open, onClose, karyawanId, onTrigger }) {
+export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEditing, selectedData, onForm }) {
   const initialKegiatan = {
     judul: "",
     proyek: "",
@@ -39,6 +39,12 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger }) {
   const [endDate, setEndDate] = useState();
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+
+  useEffect(() => {
+    if (isEditing && selectedData) {
+      setAddKegiatan(selectedData);
+    }
+  }, [isEditing, selectedData]);
 
   const fetchDataProyek = async () => {
     try {
@@ -107,9 +113,14 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger }) {
       durasi: durasi,
     };
     try {
-      await axios.post("http://localhost:3000/kegiatan", params);
+      if (isEditing && selectedData) {
+        await axios.put(`http://localhost:3000/kegiatan/${selectedData.id}`, params);
+      } else {
+        await axios.post("http://localhost:3000/kegiatan", params);
+      }
       onTrigger();
-      setAddKegiatan(initialKegiatan);
+      onForm();
+      // setAddKegiatan(initialKegiatan);
       onClose();
     } catch (err) {
       console.error("Error menambahkan kegiatan:", err);

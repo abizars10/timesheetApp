@@ -14,6 +14,8 @@ export default function DaftarKegiatan() {
   const [dataKaryawan, setDataKaryawan] = useState([]);
   const [filterData, setFilterData] = useState("");
   const [trigger, setTrigger] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleTrigger = () => {
     setTrigger(true);
@@ -22,7 +24,21 @@ export default function DaftarKegiatan() {
   const handleOpen = (id) => {
     setSelectedKaryawanId(id);
     setOpen(true);
+    setIsEditing(false);
     console.log(id);
+  };
+
+  const handleEdit = (item) => {
+    setSelectedData(item);
+    setSelectedKaryawanId(item.id_karyawan);
+    setIsEditing(true);
+    setOpen(true);
+  };
+
+  const handleForm = () => {
+    setIsEditing(false);
+    setSelectedData(null);
+    fetchDataKaryawan();
   };
 
   const handleClose = () => setOpen(false);
@@ -112,12 +128,12 @@ export default function DaftarKegiatan() {
               </Box>
             </Box>
             <Box>
-              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} open={handleOpen} onTrigger={handleTrigger} />
+              <TableData karyawanId={item.id} filteredData={filterKegiatan} rate={item.rate} onTrigger={handleTrigger} onEdit={handleEdit} />
             </Box>
           </Box>
         ))}
       {/* Modal Form Data Kegiatan */}
-      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} onTrigger={handleTrigger} />}
+      {selectedKaryawanId && <ModalForm open={open} onClose={handleClose} karyawanId={selectedKaryawanId} onTrigger={handleTrigger} isEditing={isEditing} selectedData={selectedData} onForm={handleForm} />}
     </Box>
   );
 }

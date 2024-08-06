@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function TableData({ karyawanId, filteredData, rate, open, onTrigger }) {
+export default function TableData({ karyawanId, filteredData, rate, onTrigger, onEdit }) {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
@@ -120,7 +120,7 @@ export default function TableData({ karyawanId, filteredData, rate, open, onTrig
       width: 80,
       renderCell: (params) => (
         <Box>
-          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => open(params.row)}>
+          <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => onEdit(params.row)}>
             <EditIcon fontSize={"small"} />
           </IconButton>
           <IconButton size="small" sx={{ color: "#ff8da1" }} onClick={() => handleDelete(params.row.id)}>
@@ -130,10 +130,6 @@ export default function TableData({ karyawanId, filteredData, rate, open, onTrig
       ),
     },
   ];
-
-  // const handleEdit = (id) => {
-  //   console.log(id);
-  // };
 
   const handleDelete = async (id) => {
     try {
