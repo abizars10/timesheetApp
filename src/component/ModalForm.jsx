@@ -39,12 +39,17 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
   const [endDate, setEndDate] = useState();
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+  const [error, setError] = useState(initialKegiatan);
 
   useEffect(() => {
     if (isEditing && selectedData) {
-      setAddKegiatan(selectedData);
+      setAddKegiatan((prev) => ({
+        ...prev,
+        ...selectedData,
+        proyek: dataProyek.find((proyek) => proyek.nama_proyek === selectedData.proyek) ? selectedData.proyek : "",
+      }));
     }
-  }, [isEditing, selectedData]);
+  }, [isEditing, selectedData, dataProyek]);
 
   const fetchDataProyek = async () => {
     try {
@@ -92,6 +97,7 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
     const { tgl_mulai, waktu_mulai, tgl_berakhir, waktu_berakhir } = addKegiatan;
     if (!tgl_mulai || !waktu_mulai || !tgl_berakhir || !waktu_berakhir) {
       console.error("Tanggal atau waktu tidak boleh kosong");
+      setError({ ...error, tgl_mulai: "Form Kegiatan Harus Berisi Data!" });
       return;
     }
 
@@ -120,7 +126,6 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
       }
       onTrigger();
       onForm();
-      // setAddKegiatan(initialKegiatan);
       onClose();
     } catch (err) {
       console.error("Error menambahkan kegiatan:", err);
@@ -129,6 +134,7 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
 
   const handleClose = () => {
     setAddKegiatan(initialKegiatan);
+    setError(initialKegiatan);
     onClose();
   };
 
@@ -215,7 +221,7 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
           <RequiredLabel>Judul Kegiatan</RequiredLabel>
           <TextField fullWidth size="small" value={addKegiatan.judul} onChange={(e) => handleChangeKegiatan("judul", e.target.value)} name="judul" />
           <RequiredLabel>Nama Proyek</RequiredLabel>
-          <Select fullWidth size="small" value={addKegiatan.proyek} onChange={(e) => handleChangeKegiatan("proyek", e.target.value)} name="proyek">
+          <Select fullWidth size="small" value={addKegiatan.proyek || ""} onChange={(e) => handleChangeKegiatan("proyek", e.target.value)} name="proyek">
             <MenuItem onClick={handleOpenAddProyek} sx={{ color: "#F15858" }}>
               + Tambah Proyek
             </MenuItem>
@@ -227,11 +233,18 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
           </Select>
         </Box>
 
-        <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
-          <Button onClick={handleClose}>Kembali</Button>
-          <Button variant="contained" onClick={handleAddKegiatan}>
-            Simpan
-          </Button>
+        <Box display={"flex"} justifyContent={"space-between"} marginTop={1} gap={3}>
+          <Box>
+            <Typography color={"red"} fontSize={"small"}>
+              {error.tgl_mulai}
+            </Typography>
+          </Box>
+          <Box>
+            <Button onClick={handleClose}>Kembali</Button>
+            <Button variant="contained" onClick={handleAddKegiatan}>
+              Simpan
+            </Button>
+          </Box>
         </Box>
         <ModalAddProyek open={openAddProyek} onClose={handleCloseAddProyek} handleAddProyek={handleAddProyek} />
       </Box>

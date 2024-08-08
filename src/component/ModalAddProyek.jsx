@@ -26,18 +26,27 @@ const RequiredLabel = ({ children }) => (
 
 export default function ModalAddProyek({ open, onClose, handleAddProyek }) {
   const [addProyek, setAddProyek] = useState({ nama_proyek: "" });
+  const [error, setError] = useState({ nama_proyek: "" });
 
   const handleSubmit = async () => {
-    try {
-      await axios.post("http://localhost:3000/proyek", addProyek);
-      handleAddProyek();
-    } catch (err) {
-      console.error(err);
+    if (addProyek.nama_proyek !== "") {
+      try {
+        await axios.post("http://localhost:3000/proyek", addProyek);
+        handleAddProyek();
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      setError({
+        ...error,
+        nama_proyek: "Nama Proyek Tidak Boleh Kosong!",
+      });
     }
   };
 
   const handleClose = () => {
     setAddProyek({ nama_proyek: "" });
+    setError({ nama_proyek: "" });
     onClose();
   };
 
@@ -61,7 +70,10 @@ export default function ModalAddProyek({ open, onClose, handleAddProyek }) {
           </Button>
         </Box>
         <RequiredLabel>Proyek Baru</RequiredLabel>
-        <TextField fullWidth size="small" value={addProyek.nama_proyek} name="nama_proyek" onChange={handleChangeProyek} />
+        <TextField fullWidth size="small" value={addProyek.nama_proyek || ""} name="nama_proyek" onChange={handleChangeProyek} />
+        <Typography position={"absolute"} color={"red"} fontSize={"small"}>
+          {error.nama_proyek}
+        </Typography>
         <Box display={"flex"} justifyContent={"end"} marginTop={1} gap={3}>
           <Button onClick={handleClose}>Kembali</Button>
           <Button variant="contained" onClick={handleSubmit}>
