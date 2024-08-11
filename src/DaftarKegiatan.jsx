@@ -31,7 +31,6 @@ export default function DaftarKegiatan() {
     setSelectedKaryawanId(item.id_karyawan);
     setIsEditing(true);
     setOpen(true);
-    console.log(item);
   };
 
   const handleForm = () => {

@@ -13,11 +13,8 @@ import localeData from "dayjs/plugin/localeData";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "dayjs/locale/id";
 
-// Extend Day.js dengan plugin
 dayjs.extend(customParseFormat);
 dayjs.extend(localeData);
-
-// Atur locale ke bahasa Indonesia
 dayjs.locale("id");
 
 registerLocale("id", id);
@@ -57,11 +54,20 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
 
   useEffect(() => {
     if (isEditing && selectedData) {
-      setAddKegiatan((prev) => ({
-        ...prev,
-        ...selectedData,
-        proyek: dataProyek.find((proyek) => proyek.nama_proyek === selectedData.proyek) ? selectedData.proyek : "",
-      }));
+      setAddKegiatan((prev) => {
+        const proyek = dataProyek.find((proyek) => proyek.nama_proyek === selectedData.proyek) ? selectedData.proyek : "";
+
+        return {
+          ...prev,
+          ...selectedData,
+          proyek: proyek,
+        };
+      });
+
+      setStartDate(dayjs(selectedData.tgl_mulai, "DD MMM YYYY").toDate());
+      setEndDate(dayjs(selectedData.tgl_berakhir, "DD MMM YYYY").toDate());
+      setStartTime(dayjs(selectedData.waktu_mulai, "HH:mm").toDate());
+      setEndTime(dayjs(selectedData.waktu_berakhir, "HH:mm").toDate());
     }
   }, [isEditing, selectedData, dataProyek]);
 
