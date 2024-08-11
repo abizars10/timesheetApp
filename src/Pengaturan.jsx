@@ -64,7 +64,7 @@ export default function Pengaturan() {
       } else if (addEmployee.nama === "") {
         setError({
           ...error,
-          nama: "Nama tidak boleh kosong!,",
+          nama: "Nama tidak boleh kosong!",
         });
       } else if (addEmployee.rate === "") {
         setError({
