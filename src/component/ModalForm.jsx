@@ -7,6 +7,20 @@ import ModalAddProyek from "./ModalAddProyek";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
+import { registerLocale } from "react-datepicker";
+import id from "date-fns/locale/id";
+import localeData from "dayjs/plugin/localeData";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import "dayjs/locale/id";
+
+// Extend Day.js dengan plugin
+dayjs.extend(customParseFormat);
+dayjs.extend(localeData);
+
+// Atur locale ke bahasa Indonesia
+dayjs.locale("id");
+
+registerLocale("id", id);
 
 const style = {
   position: "absolute",
@@ -65,25 +79,25 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
       setStartDate(value);
       setAddKegiatan((prev) => ({
         ...prev,
-        tgl_mulai: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+        tgl_mulai: dayjs(value).format("DD MMM YYYY"),
       }));
     } else if (name === "tgl_berakhir") {
       setEndDate(value);
       setAddKegiatan((prev) => ({
         ...prev,
-        tgl_berakhir: dayjs(value, "YYYY-MM-DD").format("DD MMM YYYY"),
+        tgl_berakhir: dayjs(value).format("DD MMM YYYY"),
       }));
     } else if (name === "waktu_mulai") {
       setStartTime(value);
       setAddKegiatan((prev) => ({
         ...prev,
-        waktu_mulai: dayjs(value, "HH:mm").format("HH:mm"),
+        waktu_mulai: dayjs(value).format("HH:mm"),
       }));
     } else if (name === "waktu_berakhir") {
       setEndTime(value);
       setAddKegiatan((prev) => ({
         ...prev,
-        waktu_berakhir: dayjs(value, "HH:mm").format("HH:mm"),
+        waktu_berakhir: dayjs(value).format("HH:mm"),
       }));
     } else {
       setAddKegiatan((prev) => ({
@@ -94,10 +108,9 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
   };
 
   const handleAddKegiatan = async () => {
-    const { tgl_mulai, waktu_mulai, tgl_berakhir, waktu_berakhir } = addKegiatan;
-    if (!tgl_mulai || !waktu_mulai || !tgl_berakhir || !waktu_berakhir) {
-      console.error("Tanggal atau waktu tidak boleh kosong");
-      setError({ ...error, tgl_mulai: "Form Kegiatan Harus Berisi Data!" });
+    const { tgl_mulai, waktu_mulai, tgl_berakhir, waktu_berakhir, judul, proyek } = addKegiatan;
+    if (!tgl_mulai || !waktu_mulai || !tgl_berakhir || !waktu_berakhir || !judul || !proyek) {
+      setError({ ...error, tgl_mulai: "Data Form Kegiatan Harus Terisi Semua!" });
       return;
     }
 
@@ -126,6 +139,7 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
       }
       onTrigger();
       onForm();
+      setError(initialKegiatan);
       onClose();
     } catch (err) {
       console.error("Error menambahkan kegiatan:", err);
@@ -181,16 +195,16 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
         <Box display={"flex"} gap={1}>
           <Box>
             <RequiredLabel>Tanggal Mulai</RequiredLabel>
-            <DatePicker className="custom-date-picker-input " selected={startDate} onChange={(date) => handleChangeKegiatan("tgl_mulai", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
+            <DatePicker className="custom-date-picker-input" selected={startDate} onChange={(date) => handleChangeKegiatan("tgl_mulai", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMMM yyyy"} locale="id" />
           </Box>
           <Box>
             <RequiredLabel>Tanggal Berakhir</RequiredLabel>
-            <DatePicker className="custom-date-picker-input " selected={endDate} onChange={(date) => handleChangeKegiatan("tgl_berakhir", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMM YYYY"} />
+            <DatePicker className="custom-date-picker-input" selected={endDate} onChange={(date) => handleChangeKegiatan("tgl_berakhir", date)} placeholderText="Pilih Tanggal" dateFormat={"dd MMMM yyyy"} locale="id" />
           </Box>
           <Box>
             <RequiredLabel>Waktu Mulai</RequiredLabel>
             <DatePicker
-              className="custom-date-picker-input "
+              className="custom-date-picker-input"
               selected={startTime}
               onChange={(time) => handleChangeKegiatan("waktu_mulai", time)}
               showTimeSelect
@@ -199,12 +213,13 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
               dateFormat={"HH:mm"}
               timeFormat="HH:mm"
               placeholderText="Pilih Waktu"
+              locale="id"
             />
           </Box>
           <Box>
             <RequiredLabel>Waktu Berakhir</RequiredLabel>
             <DatePicker
-              className="custom-date-picker-input "
+              className="custom-date-picker-input"
               selected={endTime}
               onChange={(time) => handleChangeKegiatan("waktu_berakhir", time)}
               showTimeSelect
@@ -213,6 +228,7 @@ export default function ModalForm({ open, onClose, karyawanId, onTrigger, isEdit
               dateFormat={"HH:mm"}
               timeFormat="HH:mm"
               placeholderText="Pilih Waktu"
+              locale="id"
             />
           </Box>
         </Box>

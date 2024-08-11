@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ModalFilter from "./component/ModalFilter";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function DaftarKegiatan() {
@@ -25,7 +24,6 @@ export default function DaftarKegiatan() {
     setSelectedKaryawanId(id);
     setOpen(true);
     setIsEditing(false);
-    console.log(id);
   };
 
   const handleEdit = (item) => {
@@ -33,6 +31,7 @@ export default function DaftarKegiatan() {
     setSelectedKaryawanId(item.id_karyawan);
     setIsEditing(true);
     setOpen(true);
+    console.log(item);
   };
 
   const handleForm = () => {
@@ -124,7 +123,6 @@ export default function DaftarKegiatan() {
                     startAdornment: <SearchIcon sx={{ color: "#d3d3d3" }} />,
                   }}
                 />
-                <ModalFilter />
               </Box>
             </Box>
             <Box>
