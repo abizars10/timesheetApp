@@ -8,7 +8,7 @@ export default function AppBar() {
   return (
     <Box sx={{ background: "#fff", margin: "6px 3px ", padding: "5px", paddingLeft: "20px" }}>
       <Typography variant="h6" fontWeight={"bold"}>
-        HH Timesheet
+        ETC Timesheet
       </Typography>
       <Box display={"flex"} gap={2} marginLeft={2} marginTop={2}>
         <Typography sx={{ cursor: "pointer", color: pathName === "/" ? "blue" : "#d3d3d3", borderBottom: pathName === "/" ? "2.5px solid blue" : "" }} onClick={() => navigate("/")}>
